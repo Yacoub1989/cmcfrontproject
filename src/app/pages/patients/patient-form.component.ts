@@ -1,120 +1,161 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { Patient, IdentiteType } from '../../models/patient.model';
-import { PatientService } from '../../services/patient.service';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+
+type TypeIdentite = 'CIVILE' | 'MILITAIRE';
 
 @Component({
+  selector: 'app-patient-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
-  template: `
-  <div style="display:flex; justify-content:space-between; align-items:center;">
-    <h2 style="margin:0;">{{ isEdit() ? 'Modifier patient' : 'Nouveau patient' }}</h2>
-    <a routerLink="/patients">← Retour</a>
-  </div>
-
-  <div style="margin-top:14px; display:grid; gap:12px; grid-template-columns: 1fr 1fr;">
-    <div>
-      <label>NNI</label>
-      <div style="display:flex; gap:8px;">
-        <input [(ngModel)]="model.nni" style="flex:1; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;" />
-        <button (click)="verify()" type="button" style="padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; background:white;">
-          Vérifier
-        </button>
-      </div>
-      <div *ngIf="verifyMsg()" style="margin-top:6px; color:#374151;">{{ verifyMsg() }}</div>
-    </div>
-
-    <div>
-      <label>Type identité</label>
-      <select [(ngModel)]="model.typeIdentite" style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;">
-        <option value="CIVILE">CIVILE</option>
-        <option value="MILITAIRE">MILITAIRE</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Nom</label>
-      <input [(ngModel)]="model.nom" style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;" />
-    </div>
-
-    <div>
-      <label>Prénom</label>
-      <input [(ngModel)]="model.prenom" style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;" />
-    </div>
-
-    <div>
-      <label>Date naissance</label>
-      <input type="date" [(ngModel)]="model.dateNaissance" style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;" />
-    </div>
-
-    <div>
-      <label>Téléphone</label>
-      <input [(ngModel)]="model.telephone" style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;" />
-    </div>
-  </div>
-
-  <div style="margin-top:14px; display:flex; gap:10px;">
-    <button (click)="save()" style="padding:10px 14px; border-radius:10px; border:1px solid #111827; background:#111827; color:white;">
-      Enregistrer
-    </button>
-    <span *ngIf="err()" style="color:#b91c1c;">{{ err() }}</span>
-  </div>
-  `,
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  templateUrl: './patient-form.component.html',
+  styleUrls: ['./patient-form.component.css'],
 })
-export class PatientFormComponent {
-  isEdit = signal(false);
-  verifyMsg = signal('');
-  err = signal('');
+export class PatientFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-  model: Patient = {
-    nni: '',
-    typeIdentite: 'CIVILE' as IdentiteType,
-    nom: '',
-    prenom: '',
-    dateNaissance: '',
-    telephone: '',
-  };
+  loading = false;
 
-  private id?: number;
+  isEdit = false;
+  patientId?: number;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private patientService: PatientService
-  ) {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.isEdit.set(true);
-      this.id = Number(idParam);
-      this.patientService.get(this.id).subscribe(p => (this.model = p));
-    }
-  }
+  form = this.fb.group({
+    nni: [''],
+    typeIdentite: ['CIVILE' as TypeIdentite, Validators.required],
+    nom: ['', [Validators.required, Validators.minLength(2)]],
+    prenom: ['', [Validators.required, Validators.minLength(2)]],
+    dateNaissance: [''], // yyyy-MM-dd
+    telephone: [''],
+  });
 
-  verify() {
-    this.verifyMsg.set('');
-    if (!this.model.nni?.trim()) return this.verifyMsg.set('NNI obligatoire');
-    this.patientService.verifyNNI(this.model.nni.trim()).subscribe({
-      next: (res) => this.verifyMsg.set(res?.message ?? 'NNI vérifié'),
-      error: () => this.verifyMsg.set('Impossible de vérifier (API ANRPTS non dispo ou erreur).'),
+  // ✅ adapte si besoin
+  private API_BASE = 'http://localhost:7777/api';
+
+  ngOnInit(): void {
+    // ✅ important avec loadComponent + navigation
+    this.route.paramMap.subscribe(pm => {
+      const id = pm.get('id');
+      console.log('EDIT ROUTE id =', id);
+
+      if (id) {
+        this.isEdit = true;
+        this.patientId = Number(id);
+        this.loadPatient(this.patientId);
+      } else {
+        this.isEdit = false;
+        this.patientId = undefined;
+        // si tu veux reset quand /new
+        // this.resetForm();
+      }
     });
   }
 
-  save() {
-    this.err.set('');
-    if (!this.model.nni?.trim() || !this.model.nom?.trim() || !this.model.prenom?.trim()) {
-      this.err.set('NNI, Nom, Prénom obligatoires.');
+  private async loadPatient(id: number) {
+    try {
+      this.loading = true;
+
+      const url = `${this.API_BASE}/patients/${id}`;
+      console.log('CALLING API:', url);
+
+      const p: any = await this.http.get(url).toPromise();
+      console.log('PATIENT LOADED:', p);
+
+      // si backend renvoie "2026-01-04T00:00:00" => garder "2026-01-04"
+      const dateOnly = (v?: any) => (v ? String(v).substring(0, 10) : '');
+
+      this.form.patchValue({
+        nni: p?.nni ?? '',
+        typeIdentite: (p?.typeIdentite ?? 'CIVILE') as TypeIdentite,
+        nom: p?.nom ?? '',
+        prenom: p?.prenom ?? '',
+        dateNaissance: dateOnly(p?.dateNaissance),
+        telephone: p?.telephone ?? '',
+      });
+    } catch (e) {
+      console.error('Load patient error:', e);
+      this.router.navigate(['/patients']);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async verifyNNI() {
+    const nni = this.form.value.nni?.trim();
+    if (!nni) return;
+
+    try {
+      this.loading = true;
+
+      const data: any = await this.http
+        .get(`${this.API_BASE}/nni/${encodeURIComponent(nni)}`)
+        .toPromise();
+
+      this.form.patchValue({
+        nom: data?.nom ?? this.form.value.nom ?? '',
+        prenom: data?.prenom ?? this.form.value.prenom ?? '',
+        telephone: data?.telephone ?? this.form.value.telephone ?? '',
+      });
+    } catch (e) {
+      console.error('NNI not found / error:', e);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  resetForm() {
+    if (this.isEdit && this.patientId) {
+      // en mode edit: reset => recharger les valeurs depuis le serveur
+      this.loadPatient(this.patientId);
       return;
     }
 
-    const req = this.isEdit() && this.id
-      ? this.patientService.update(this.id, this.model)
-      : this.patientService.create(this.model);
-
-    req.subscribe({
-      next: () => this.router.navigateByUrl('/patients'),
-      error: () => this.err.set('Erreur enregistrement. Vérifie le backend / CORS.'),
+    this.form.reset({
+      nni: '',
+      typeIdentite: 'CIVILE',
+      nom: '',
+      prenom: '',
+      dateNaissance: '',
+      telephone: '',
     });
+  }
+
+  async onSubmit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const raw = this.form.getRawValue();
+
+    const payload = {
+      ...raw,
+      // si ton backend attend LocalDateTime:
+      // dateNaissance: raw.dateNaissance ? `${raw.dateNaissance}T00:00:00` : null,
+    };
+
+    try {
+      this.loading = true;
+
+      if (this.isEdit && this.patientId) {
+        // ✅ UPDATE
+        await this.http
+          .put(`${this.API_BASE}/patients/${this.patientId}`, payload)
+          .toPromise();
+      } else {
+        // ✅ CREATE
+        await this.http.post(`${this.API_BASE}/patients`, payload).toPromise();
+      }
+
+      this.router.navigate(['/patients']);
+    } catch (e) {
+      console.error('Save patient error:', e);
+    } finally {
+      this.loading = false;
+    }
   }
 }

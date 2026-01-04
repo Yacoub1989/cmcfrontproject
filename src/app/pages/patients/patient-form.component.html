@@ -1,0 +1,83 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Nouveau patient</h1>
+      <p class="subtitle">Saisir les informations d’identité et de contact.</p>
+    </div>
+
+    <a class="link-back" routerLink="/patients">
+      ← Retour
+    </a>
+  </header>
+
+  <form class="card" (ngSubmit)="onSubmit()" [formGroup]="form">
+    <div class="card-header">
+      <div class="badge">Patient</div>
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" (click)="resetForm()">Réinitialiser</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading">
+          <span *ngIf="!loading">Enregistrer</span>
+          <span *ngIf="loading">Enregistrement…</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- NNI -->
+      <div class="field span-2">
+        <label>NNI</label>
+        <div class="inline">
+          <input
+            type="text"
+            formControlName="nni"
+            placeholder="Ex: 1234567890"
+            class="input"
+          />
+          <button type="button" class="btn btn-outline" (click)="verifyNNI()" [disabled]="!form.value.nni">
+            Vérifier
+          </button>
+        </div>
+        <small class="hint">Identifiant national (si disponible).</small>
+      </div>
+
+      <!-- Type identité -->
+      <div class="field">
+        <label>Type identité</label>
+        <select class="input" formControlName="typeIdentite">
+          <option value="CIVILE">Civile</option>
+          <option value="MILITAIRE">Militaire</option>
+        </select>
+      </div>
+
+      <!-- Nom -->
+      <div class="field">
+        <label>Nom</label>
+        <input class="input" type="text" formControlName="nom" placeholder="Nom" />
+      </div>
+
+      <!-- Prénom -->
+      <div class="field">
+        <label>Prénom</label>
+        <input class="input" type="text" formControlName="prenom" placeholder="Prénom" />
+      </div>
+
+      <!-- Date naissance -->
+      <div class="field">
+        <label>Date de naissance</label>
+        <input class="input" type="date" formControlName="dateNaissance" />
+        <small class="hint">Format: yyyy-mm-dd</small>
+      </div>
+
+      <!-- Téléphone -->
+      <div class="field">
+        <label>Téléphone</label>
+        <input class="input" type="tel" formControlName="telephone" placeholder="+222 …" />
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <span class="dot"></span>
+      <span>Les champs peuvent être complétés plus tard si le patient n’a pas toutes les infos.</span>
+    </div>
+  </form>
+</div>
