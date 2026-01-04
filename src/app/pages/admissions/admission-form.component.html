@@ -1,0 +1,121 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>{{ pageTitle }}</h1>
+      <p class="subtitle">Cardiologie — Admission et informations cliniques</p>
+
+      <div class="meta">
+        <span class="pill">
+          <span class="dot ok"></span>
+          {{ isEdit() ? 'Mode édition' : 'Mode création' }}
+        </span>
+
+        <span class="pill" *ngIf="loading()">
+          Chargement…
+        </span>
+      </div>
+    </div>
+
+    <a class="link-back" routerLink="/admissions">← Retour</a>
+  </header>
+
+  <div class="card">
+    <!-- En-tête carte -->
+    <div class="card-header">
+      <div class="badge">Admission</div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" (click)="reset()" [disabled]="loading()">
+          Réinitialiser
+        </button>
+        <a class="btn btn-outline" routerLink="/admissions">Annuler</a>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="loading()">
+          <span *ngIf="!loading()">{{ saveLabel }}</span>
+          <span *ngIf="loading()">{{ isEdit() ? 'Mise à jour…' : 'Enregistrement…' }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Message erreur -->
+    <div class="alert" *ngIf="err()">
+      <span class="alert-dot"></span>
+      <span>{{ err() }}</span>
+    </div>
+
+    <div class="sections">
+      <!-- SECTION 1 -->
+      <section class="section">
+        <div class="section-title">
+          <div class="icon">🫀</div>
+          <div>
+            <div class="section-h">Données d’admission</div>
+            <div class="section-p">Patient, date d’entrée, motif</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label>Patient ID</label>
+            <input
+              class="input"
+              type="number"
+              [(ngModel)]="model.patientId"
+              placeholder="Ex: 1"
+              [disabled]="loading()"
+            />
+            <small class="hint">Identifiant du patient (depuis la liste Patients).</small>
+          </div>
+
+          <div class="field">
+            <label>Date d’entrée</label>
+            <input
+              class="input"
+              type="datetime-local"
+              [(ngModel)]="model.dateEntree"
+              [disabled]="loading()"
+            />
+            <small class="hint">Heure d’arrivée du patient au service.</small>
+          </div>
+
+          <div class="field span-2">
+            <label>Motif</label>
+            <select class="input" [(ngModel)]="model.motif" [disabled]="loading()">
+              <option *ngFor="let m of motifs" [value]="m">{{ m }}</option>
+            </select>
+            <small class="hint">Liste standardisée des pathologies cardio.</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 2 -->
+      <section class="section">
+        <div class="section-title">
+          <div class="icon">🩺</div>
+          <div>
+            <div class="section-h">Clinique</div>
+            <div class="section-p">Histoire de la maladie</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field span-2">
+            <label>Histoire de la maladie</label>
+            <textarea
+              class="input textarea"
+              rows="6"
+              [(ngModel)]="model.histoireMaladie"
+              placeholder="Décrire brièvement l’histoire, symptômes, facteurs de risque..."
+              [disabled]="loading()"
+            ></textarea>
+            <small class="hint">Ex: douleur thoracique, dyspnée, palpitations, etc.</small>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer-note">
+      <span class="dot ok"></span>
+      <span>Les informations cliniques peuvent être complétées après stabilisation du patient.</span>
+    </div>
+  </div>
+</div>

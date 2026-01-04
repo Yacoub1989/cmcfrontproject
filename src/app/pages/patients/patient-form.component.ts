@@ -20,36 +20,53 @@ export class PatientFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
   loading = false;
-
   isEdit = false;
   patientId?: number;
+
+  // ✅ adapte si besoin (AWS / local)
+  private API_BASE = 'http://localhost:7777/api';
 
   form = this.fb.group({
     nni: [''],
     typeIdentite: ['CIVILE' as TypeIdentite, Validators.required],
     nom: ['', [Validators.required, Validators.minLength(2)]],
     prenom: ['', [Validators.required, Validators.minLength(2)]],
-    dateNaissance: [''], // yyyy-MM-dd
+    dateNaissance: [''], // input type="date" => yyyy-MM-dd
     telephone: [''],
   });
 
-  // ✅ adapte si besoin
-  private API_BASE = 'http://localhost:7777/api';
+  // ✅ UI helpers
+  get pageTitle(): string {
+    return this.isEdit ? 'Modifier patient' : 'Nouveau patient';
+  }
+
+  get submitLabel(): string {
+    return this.isEdit ? 'Mettre à jour' : 'Enregistrer';
+  }
+
+  get initials(): string {
+    const nom = this.form.value.nom?.trim()?.[0] ?? '';
+    const prenom = this.form.value.prenom?.trim()?.[0] ?? '';
+    return (nom + prenom).toUpperCase() || 'P';
+  }
 
   ngOnInit(): void {
     // ✅ important avec loadComponent + navigation
     this.route.paramMap.subscribe(pm => {
       const id = pm.get('id');
-      console.log('EDIT ROUTE id =', id);
 
       if (id) {
         this.isEdit = true;
         this.patientId = Number(id);
+        if (!Number.isFinite(this.patientId)) {
+          this.router.navigate(['/patients']);
+          return;
+        }
         this.loadPatient(this.patientId);
       } else {
         this.isEdit = false;
         this.patientId = undefined;
-        // si tu veux reset quand /new
+        // si tu veux reset quand /new:
         // this.resetForm();
       }
     });
@@ -60,10 +77,7 @@ export class PatientFormComponent implements OnInit {
       this.loading = true;
 
       const url = `${this.API_BASE}/patients/${id}`;
-      console.log('CALLING API:', url);
-
       const p: any = await this.http.get(url).toPromise();
-      console.log('PATIENT LOADED:', p);
 
       // si backend renvoie "2026-01-04T00:00:00" => garder "2026-01-04"
       const dateOnly = (v?: any) => (v ? String(v).substring(0, 10) : '');
@@ -95,10 +109,12 @@ export class PatientFormComponent implements OnInit {
         .get(`${this.API_BASE}/nni/${encodeURIComponent(nni)}`)
         .toPromise();
 
+      // Remplir automatiquement si trouvé (sans écraser si vide côté API)
       this.form.patchValue({
         nom: data?.nom ?? this.form.value.nom ?? '',
         prenom: data?.prenom ?? this.form.value.prenom ?? '',
         telephone: data?.telephone ?? this.form.value.telephone ?? '',
+        // dateNaissance: data?.dateNaissance ? String(data.dateNaissance).substring(0,10) : this.form.value.dateNaissance ?? '',
       });
     } catch (e) {
       console.error('NNI not found / error:', e);
@@ -132,9 +148,10 @@ export class PatientFormComponent implements OnInit {
 
     const raw = this.form.getRawValue();
 
-    const payload = {
+    // ⚠️ dateNaissance : si ton backend attend LocalDate => OK ("yyyy-MM-dd")
+    // Si ton backend attend LocalDateTime => décommente la ligne ci-dessous
+    const payload: any = {
       ...raw,
-      // si ton backend attend LocalDateTime:
       // dateNaissance: raw.dateNaissance ? `${raw.dateNaissance}T00:00:00` : null,
     };
 
@@ -148,7 +165,9 @@ export class PatientFormComponent implements OnInit {
           .toPromise();
       } else {
         // ✅ CREATE
-        await this.http.post(`${this.API_BASE}/patients`, payload).toPromise();
+        await this.http
+          .post(`${this.API_BASE}/patients`, payload)
+          .toPromise();
       }
 
       this.router.navigate(['/patients']);

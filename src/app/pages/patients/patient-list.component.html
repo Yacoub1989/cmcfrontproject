@@ -1,39 +1,116 @@
-<div style="display:flex; justify-content:space-between; align-items:center;">
-  <h2 style="margin:0;">Patients</h2>
-  <a routerLink="/patients/new" style="padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; text-decoration:none;">
-    + Nouveau patient
-  </a>
-</div>
+<div class="page">
+  <header class="topbar">
+    <div>
+      <h1>Patients</h1>
+      <p class="subtitle">Gestion des dossiers — Hôpital cardiologique</p>
+    </div>
 
-<div style="margin-top:12px;">
-  <input [value]="q()" (input)="q.set(($any($event.target)).value)"
-         placeholder="Rechercher (nom, nni, tel...)"
-         style="width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;" />
-</div>
+    <div class="topbar-actions">
+      <div class="status-pill">
+        <span class="dot ok"></span>
+        <span>Service actif</span>
+      </div>
 
-<div style="margin-top:12px; border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
-  <table style="width:100%; border-collapse:collapse;">
-    <thead style="background:#f9fafb;">
-    <tr>
-      <th style="text-align:left; padding:10px;">Code</th>
-      <th style="text-align:left; padding:10px;">NNI</th>
-      <th style="text-align:left; padding:10px;">Nom</th>
-      <th style="text-align:left; padding:10px;">Type</th>
-      <th style="text-align:left; padding:10px;">Téléphone</th>
-      <th style="padding:10px;"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let p of filtered()" style="border-top:1px solid #eef2f7;">
-      <td style="padding:10px;">{{ p.codePatient || '-' }}</td>
-      <td style="padding:10px;">{{ p.nni }}</td>
-      <td style="padding:10px;">{{ p.nom }} {{ p.prenom }}</td>
-      <td style="padding:10px;">{{ p.typeIdentite }}</td>
-      <td style="padding:10px;">{{ p.telephone || '-' }}</td>
-      <td style="padding:10px; text-align:right;">
-        <a [routerLink]="['/patients', p.id, 'edit']">Modifier</a>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+      <a class="btn btn-primary" routerLink="/patients/new">
+        + Nouveau patient
+      </a>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card-head">
+      <div class="left">
+        <div class="metric">
+          <div class="metric-label">Total</div>
+          <div class="metric-value">{{ total() }}</div>
+        </div>
+
+        <div class="chips">
+          <button class="chip" type="button"
+                  (click)="setTypeFilter('ALL')"
+                  [class.active]="typeFilter() === 'ALL'">
+            Tous
+          </button>
+          <button class="chip" type="button"
+                  (click)="setTypeFilter('CIVILE')"
+                  [class.active]="typeFilter() === 'CIVILE'">
+            Civile
+          </button>
+          <button class="chip" type="button"
+                  (click)="setTypeFilter('MILITAIRE')"
+                  [class.active]="typeFilter() === 'MILITAIRE'">
+            Militaire
+          </button>
+        </div>
+      </div>
+
+      <div class="search">
+        <input
+          [value]="q()"
+          (input)="q.set(($any($event.target)).value)"
+          placeholder="Rechercher (nom, NNI, téléphone, code...)"
+        />
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Code</th>
+          <th>NNI</th>
+          <th>Type</th>
+          <th>Téléphone</th>
+          <th class="right">Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- Loading -->
+        <tr *ngIf="loading()">
+          <td colspan="6" class="empty">Chargement…</td>
+        </tr>
+
+        <!-- Empty -->
+        <tr *ngIf="!loading() && filtered().length === 0">
+          <td colspan="6" class="empty">Aucun patient trouvé.</td>
+        </tr>
+
+        <!-- Rows -->
+        <tr *ngFor="let p of filtered()" class="row">
+          <td>
+            <div class="patient">
+              <div class="avatar">{{ initials(p) }}</div>
+              <div>
+                <div class="patient-name">{{ p.nom }} {{ p.prenom }}</div>
+                <div class="patient-sub">Dossier patient</div>
+              </div>
+            </div>
+          </td>
+
+          <td class="mono">{{ p.codePatient || '-' }}</td>
+          <td class="mono">{{ p.nni || '-' }}</td>
+
+          <td>
+              <span class="badge"
+                    [class.badge-blue]="p.typeIdentite==='CIVILE'"
+                    [class.badge-green]="p.typeIdentite==='MILITAIRE'">
+                {{ p.typeIdentite }}
+              </span>
+          </td>
+
+          <td class="mono">{{ p.telephone || '-' }}</td>
+
+          <td class="right">
+            <a class="btn btn-outline btn-sm"
+               [routerLink]="['/patients', p.id, 'edit']">
+              Modifier
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>

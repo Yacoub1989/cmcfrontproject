@@ -19,7 +19,7 @@ h1{ margin:0; font-size:28px; letter-spacing:-0.02em; }
   border-radius:999px;
   background:#fff;
   color:#344054;
-  font-weight:700;
+  font-weight:800;
   font-size:13px;
 }
 .dot{ width:8px; height:8px; border-radius:50%; }
@@ -44,23 +44,11 @@ h1{ margin:0; font-size:28px; letter-spacing:-0.02em; }
 .left{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
 
 .metric{ display:flex; gap:10px; align-items:baseline; }
-.metric-label{ color:#667085; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; }
+.metric-label{ color:#667085; font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:.04em; }
 .metric-value{ font-size:20px; font-weight:900; color:#101828; }
 
-.chips{ display:flex; gap:8px; flex-wrap:wrap; }
-.chip{
-  border:1px solid #d0d5dd;
-  background:#fff;
-  border-radius:999px;
-  padding:8px 10px;
-  font-weight:800;
-  font-size:13px;
-  cursor:pointer;
-}
-.chip.active{
-  border-color:#2e90fa;
-  box-shadow:0 0 0 4px rgba(46,144,250,.14);
-}
+.legend{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.legend-item{ color:#667085; font-size:12px; font-weight:800; }
 
 .search input{
   width:360px;
@@ -97,28 +85,21 @@ tbody td{ padding:12px 14px; border-top:1px solid #f2f4f7; }
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-.patient{ display:flex; gap:12px; align-items:center; }
-.avatar{
-  width:34px; height:34px; border-radius:10px;
-  display:flex; align-items:center; justify-content:center;
-  background:#e6f4ff; color:#0b5394;
-  font-weight:900;
-  border:1px solid #b2ddff;
-}
-.patient-name{ font-weight:900; color:#101828; }
-.patient-sub{ color:#667085; font-size:12px; margin-top:2px; }
+.motif-title{ font-weight:900; color:#101828; }
+.motif-sub{ margin-top:6px; }
 
 .badge{
   display:inline-flex;
   align-items:center;
-  padding:7px 10px;
+  padding:6px 10px;
   border-radius:999px;
   font-weight:900;
   font-size:12px;
   border:1px solid transparent;
 }
-.badge-blue{ background:#eff8ff; color:#175cd3; border-color:#b2ddff; }
-.badge-green{ background:#ecfdf3; color:#027a48; border-color:#abefc6; }
+.badge-red{ background:#fef3f2; color:#b42318; border-color:#fecdca; }
+.badge-amber{ background:#fffaeb; color:#b54708; border-color:#fedf89; }
+.badge-gray{ background:#f2f4f7; color:#344054; border-color:#eaecf0; }
 
 .btn{
   border-radius:12px;
@@ -135,3 +116,36 @@ tbody td{ padding:12px 14px; border-top:1px solid #f2f4f7; }
 .btn-outline:hover{ background:#f9fafb; }
 
 .empty{ text-align:center; color:#667085; padding:22px; }
+.chips{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+.chip{
+  border:1px solid #d0d5dd;
+  background:#fff;
+  border-radius:999px;
+  padding:8px 10px;
+  font-weight:900;
+  font-size:13px;
+  cursor:pointer;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+}
+
+.chip.active{
+  border-color:#2e90fa;
+  box-shadow:0 0 0 4px rgba(46,144,250,.14);
+}
+
+.count{
+  display:inline-flex;
+  min-width:22px;
+  height:22px;
+  padding:0 8px;
+  border-radius:999px;
+  align-items:center;
+  justify-content:center;
+  background:#f2f4f7;
+  color:#344054;
+  font-size:12px;
+  font-weight:900;
+}

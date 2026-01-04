@@ -1,0 +1,116 @@
+<div class="page">
+  <header class="topbar">
+    <div>
+      <h1>Admissions</h1>
+      <p class="subtitle">Suivi des admissions — Cardiologie</p>
+    </div>
+
+    <div class="topbar-actions">
+      <div class="status-pill">
+        <span class="dot ok"></span>
+        <span>Service actif</span>
+      </div>
+
+      <a class="btn btn-primary" routerLink="/admissions/new">
+        + Nouvelle admission
+      </a>
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card-head">
+      <div class="left">
+        <div class="metric">
+          <div class="metric-label">Total</div>
+          <div class="metric-value">{{ total() }}</div>
+        </div>
+
+        <!-- ✅ Filtres cliquables -->
+        <div class="chips">
+          <button class="chip" type="button"
+                  (click)="setAgeFilter('ALL')"
+                  [class.active]="ageFilter() === 'ALL'">
+            Tous
+          </button>
+
+          <button class="chip" type="button"
+                  (click)="setAgeFilter('TODAY')"
+                  [class.active]="ageFilter() === 'TODAY'">
+            Aujourd’hui <span class="count">{{ countToday() }}</span>
+          </button>
+
+          <button class="chip" type="button"
+                  (click)="setAgeFilter('LE7')"
+                  [class.active]="ageFilter() === 'LE7'">
+            ≤ 7 jours <span class="count">{{ countLe7() }}</span>
+          </button>
+
+          <button class="chip" type="button"
+                  (click)="setAgeFilter('OLD')"
+                  [class.active]="ageFilter() === 'OLD'">
+            Ancien <span class="count">{{ countOld() }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="search">
+        <input
+          [value]="q()"
+          (input)="q.set(($any($event.target)).value)"
+          placeholder="Rechercher (ID, patient, motif, date...)"
+        />
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Patient</th>
+          <th>Motif</th>
+          <th>Date d’entrée</th>
+          <th class="right">Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngIf="loading()">
+          <td colspan="5" class="empty">Chargement…</td>
+        </tr>
+
+        <tr *ngIf="!loading() && filtered().length === 0">
+          <td colspan="5" class="empty">Aucune admission trouvée.</td>
+        </tr>
+
+        <tr *ngFor="let a of filtered()" class="row">
+          <td class="mono">{{ a.id }}</td>
+          <td class="mono">Patient #{{ a.patientId }}</td>
+
+          <td>
+            <div class="motif">
+              <div class="motif-title">{{ a.motif || '—' }}</div>
+              <div class="motif-sub">
+                  <span class="badge"
+                        [class.badge-red]="getAgeBucket(a) === 'TODAY'"
+                        [class.badge-amber]="getAgeBucket(a) === 'LE7'"
+                        [class.badge-gray]="getAgeBucket(a) === 'OLD'">
+                    {{ badgeLabel(a) }}
+                  </span>
+              </div>
+            </div>
+          </td>
+
+          <td class="mono">{{ formatDate(a.dateEntree) }}</td>
+
+          <td class="right">
+            <a class="btn btn-outline btn-sm" [routerLink]="['/admissions', a.id, 'edit']">
+              Modifier
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

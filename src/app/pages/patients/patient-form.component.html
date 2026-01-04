@@ -1,83 +1,142 @@
 <div class="page">
   <header class="page-header">
-    <div>
-      <h1>Nouveau patient</h1>
-      <p class="subtitle">Saisir les informations d’identité et de contact.</p>
+    <div class="header-left">
+      <h1>{{ pageTitle }}</h1>
+      <p class="subtitle">Dossier patient — Service de Cardiologie</p>
+
+      <div class="meta">
+        <span class="pill">
+          <span class="dot ok"></span>
+          {{ isEdit ? 'Mode édition' : 'Mode création' }}
+        </span>
+
+        <span class="pill" *ngIf="isEdit && patientId">
+          ID: <span class="mono">{{ patientId }}</span>
+        </span>
+      </div>
     </div>
 
-    <a class="link-back" routerLink="/patients">
-      ← Retour
-    </a>
+    <a class="link-back" routerLink="/patients">← Retour</a>
   </header>
 
   <form class="card" (ngSubmit)="onSubmit()" [formGroup]="form">
-    <div class="card-header">
-      <div class="badge">Patient</div>
-      <div class="actions">
+
+    <!-- Résumé patient (visible surtout en edit) -->
+    <div class="patient-summary" *ngIf="isEdit">
+      <div class="avatar">{{ initials }}</div>
+      <div class="summary-text">
+        <div class="summary-name">
+          {{ form.value.nom || '—' }} {{ form.value.prenom || '' }}
+        </div>
+        <div class="summary-sub">
+          NNI: <span class="mono">{{ form.value.nni || '-' }}</span>
+          <span class="sep">•</span>
+          Type: <span class="badge"
+                      [class.badge-blue]="form.value.typeIdentite==='CIVILE'"
+                      [class.badge-green]="form.value.typeIdentite==='MILITAIRE'">
+                {{ form.value.typeIdentite }}
+              </span>
+        </div>
+      </div>
+      <div class="summary-actions">
         <button type="button" class="btn btn-ghost" (click)="resetForm()">Réinitialiser</button>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <div class="sections">
+
+      <!-- IDENTITÉ -->
+      <section class="section">
+        <div class="section-title">
+          <div class="icon">🫀</div>
+          <div>
+            <div class="section-h">Identité</div>
+            <div class="section-p">Informations administratives du patient</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field span-2">
+            <label>NNI</label>
+            <div class="inline">
+              <input class="input" type="text" formControlName="nni" placeholder="Ex: 1234567890" />
+              <button type="button" class="btn btn-outline" (click)="verifyNNI()" [disabled]="!form.value.nni || loading">
+                Vérifier
+              </button>
+            </div>
+            <small class="hint">Identifiant national (si disponible).</small>
+          </div>
+
+          <div class="field">
+            <label>Type identité</label>
+            <select class="input" formControlName="typeIdentite">
+              <option value="CIVILE">Civile</option>
+              <option value="MILITAIRE">Militaire</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Nom</label>
+            <input class="input" type="text" formControlName="nom" placeholder="Nom" />
+          </div>
+
+          <div class="field">
+            <label>Prénom</label>
+            <input class="input" type="text" formControlName="prenom" placeholder="Prénom" />
+          </div>
+
+          <div class="field">
+            <label>Date de naissance</label>
+            <input class="input" type="date" formControlName="dateNaissance" />
+            <small class="hint">Format: yyyy-mm-dd</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="section">
+        <div class="section-title">
+          <div class="icon">📞</div>
+          <div>
+            <div class="section-h">Contact</div>
+            <div class="section-p">Coordonnées et informations utiles</div>
+          </div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="field">
+            <label>Téléphone</label>
+            <input class="input" type="tel" formControlName="telephone" placeholder="+222 …" />
+            <small class="hint">Numéro du patient ou accompagnant.</small>
+          </div>
+
+          <div class="field">
+            <label>Note clinique (optionnel)</label>
+            <input class="input" type="text" placeholder="Ex: Allergies, contact urgence..." disabled />
+            <small class="hint">Tu peux ajouter ce champ plus tard dans ton modèle.</small>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Actions bas -->
+    <div class="form-footer">
+      <div class="footer-note">
+        <span class="dot"></span>
+        <span>Les champs peuvent être complétés plus tard si le patient n’a pas toutes les infos.</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-outline" routerLink="/patients">Annuler</a>
+
         <button type="submit" class="btn btn-primary" [disabled]="form.invalid || loading">
-          <span *ngIf="!loading">Enregistrer</span>
-          <span *ngIf="loading">Enregistrement…</span>
+          <span *ngIf="!loading">{{ submitLabel }}</span>
+          <span *ngIf="loading">{{ isEdit ? 'Mise à jour…' : 'Enregistrement…' }}</span>
         </button>
       </div>
     </div>
 
-    <div class="grid">
-      <!-- NNI -->
-      <div class="field span-2">
-        <label>NNI</label>
-        <div class="inline">
-          <input
-            type="text"
-            formControlName="nni"
-            placeholder="Ex: 1234567890"
-            class="input"
-          />
-          <button type="button" class="btn btn-outline" (click)="verifyNNI()" [disabled]="!form.value.nni">
-            Vérifier
-          </button>
-        </div>
-        <small class="hint">Identifiant national (si disponible).</small>
-      </div>
-
-      <!-- Type identité -->
-      <div class="field">
-        <label>Type identité</label>
-        <select class="input" formControlName="typeIdentite">
-          <option value="CIVILE">Civile</option>
-          <option value="MILITAIRE">Militaire</option>
-        </select>
-      </div>
-
-      <!-- Nom -->
-      <div class="field">
-        <label>Nom</label>
-        <input class="input" type="text" formControlName="nom" placeholder="Nom" />
-      </div>
-
-      <!-- Prénom -->
-      <div class="field">
-        <label>Prénom</label>
-        <input class="input" type="text" formControlName="prenom" placeholder="Prénom" />
-      </div>
-
-      <!-- Date naissance -->
-      <div class="field">
-        <label>Date de naissance</label>
-        <input class="input" type="date" formControlName="dateNaissance" />
-        <small class="hint">Format: yyyy-mm-dd</small>
-      </div>
-
-      <!-- Téléphone -->
-      <div class="field">
-        <label>Téléphone</label>
-        <input class="input" type="tel" formControlName="telephone" placeholder="+222 …" />
-      </div>
-    </div>
-
-    <div class="footer-note">
-      <span class="dot"></span>
-      <span>Les champs peuvent être complétés plus tard si le patient n’a pas toutes les infos.</span>
-    </div>
   </form>
 </div>
