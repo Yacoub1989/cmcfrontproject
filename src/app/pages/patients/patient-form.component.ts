@@ -140,41 +140,54 @@ export class PatientFormComponent implements OnInit {
     });
   }
 
-  async onSubmit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+async onSubmit() {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
+  }
+
+  const raw = this.form.getRawValue();
+
+  const payload: any = {
+    ...raw,
+    // dateNaissance: raw.dateNaissance ? `${raw.dateNaissance}T00:00:00` : null,
+  };
+
+  try {
+    this.loading = true;
+
+    if (this.isEdit && this.patientId) {
+      // ✅ UPDATE => retour liste patients (ou tu peux aller vers admission si tu veux)
+      await this.http
+        .put(`${this.API_BASE}/patients/${this.patientId}`, payload)
+        .toPromise();
+
+      this.router.navigate(['/patients']);
       return;
     }
 
-    const raw = this.form.getRawValue();
+    // ✅ CREATE => récupérer le patient créé
+    const created: any = await this.http
+      .post(`${this.API_BASE}/patients`, payload)
+      .toPromise();
 
-    // ⚠️ dateNaissance : si ton backend attend LocalDate => OK ("yyyy-MM-dd")
-    // Si ton backend attend LocalDateTime => décommente la ligne ci-dessous
-    const payload: any = {
-      ...raw,
-      // dateNaissance: raw.dateNaissance ? `${raw.dateNaissance}T00:00:00` : null,
-    };
+    const newPatientId = created?.id ?? created?.patientId ?? created?.data?.id;
 
-    try {
-      this.loading = true;
-
-      if (this.isEdit && this.patientId) {
-        // ✅ UPDATE
-        await this.http
-          .put(`${this.API_BASE}/patients/${this.patientId}`, payload)
-          .toPromise();
-      } else {
-        // ✅ CREATE
-        await this.http
-          .post(`${this.API_BASE}/patients`, payload)
-          .toPromise();
-      }
-
+    if (!newPatientId) {
+      // fallback: si backend ne renvoie pas id
+      console.warn('Patient créé mais ID introuvable dans la réponse:', created);
       this.router.navigate(['/patients']);
-    } catch (e) {
-      console.error('Save patient error:', e);
-    } finally {
-      this.loading = false;
+      return;
     }
+
+    // ✅ Redirection immédiate vers création admission avec patientId pré-rempli
+    this.router.navigate(['/admissions/new'], { queryParams: { patientId: newPatientId } });
+
+  } catch (e) {
+    console.error('Save patient error:', e);
+  } finally {
+    this.loading = false;
   }
+}
+
 }

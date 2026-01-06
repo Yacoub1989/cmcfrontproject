@@ -14,6 +14,7 @@ export const routes: Routes = [
 
       { path: 'admissions', loadComponent: () => import('./pages/admissions/admission-list.component').then(m => m.AdmissionListComponent) },
       { path: 'admissions/new', loadComponent: () => import('./pages/admissions/admission-form.component').then(m => m.AdmissionFormComponent) },
+
       { path: 'admissions/:id/edit', loadComponent: () => import('./pages/admissions/admission-form.component').then(m => m.AdmissionFormComponent) },
 
       { path: 'beds', loadComponent: () => import('./pages/beds/bed-dashboard.component').then(m => m.BedDashboardComponent) },

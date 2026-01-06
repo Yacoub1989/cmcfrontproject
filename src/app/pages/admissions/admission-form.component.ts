@@ -36,38 +36,47 @@ export class AdmissionFormComponent {
 
   private id?: number;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private admissionService: AdmissionService
-  ) {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.isEdit.set(true);
-      this.id = Number(idParam);
+  lockedPatientId = false;
 
-      this.loading.set(true);
-      this.admissionService.get(this.id).subscribe({
-        next: (a) => {
-          // datetime-local attend "YYYY-MM-DDTHH:mm"
-          const normalized = {
-            ...a,
-            dateEntree: this.toDateTimeLocal(a?.dateEntree),
-          } as Admission;
 
-          this.model = normalized;
-          this.loading.set(false);
-        },
-        error: () => {
-          this.err.set('Impossible de charger l’admission.');
-          this.loading.set(false);
-        },
-      });
-    } else {
-      // Valeur par défaut date entrée: maintenant
-      this.model.dateEntree = this.nowDateTimeLocal();
-    }
+constructor(
+  private route: ActivatedRoute,
+  private router: Router,
+  private admissionService: AdmissionService
+) {
+  const idParam = this.route.snapshot.paramMap.get('id');
+
+  // ✅ Si on arrive depuis /admissions/new?patientId=123
+  const qp = this.route.snapshot.queryParamMap.get('patientId');
+  if (qp && !idParam) {
+    this.model.patientId = Number(qp);
+    this.lockedPatientId = true; // 🔒 verrouille le champ
   }
+
+  if (idParam) {
+    this.isEdit.set(true);
+    this.id = Number(idParam);
+
+    this.loading.set(true);
+    this.admissionService.get(this.id).subscribe({
+      next: (a) => {
+        this.model = {
+          ...a,
+          dateEntree: this.toDateTimeLocal((a as any)?.dateEntree),
+        } as Admission;
+
+        this.loading.set(false);
+      },
+      error: () => {
+        this.err.set('Impossible de charger l’admission.');
+        this.loading.set(false);
+      },
+    });
+  } else {
+    this.model.dateEntree = this.nowDateTimeLocal();
+  }
+}
+
 
   get pageTitle(): string {
     return this.isEdit() ? 'Modifier admission' : 'Nouvelle admission';

@@ -61,7 +61,7 @@
               type="number"
               [(ngModel)]="model.patientId"
               placeholder="Ex: 1"
-              [disabled]="loading()"
+              [disabled]="loading() || lockedPatientId"
             />
             <small class="hint">Identifiant du patient (depuis la liste Patients).</small>
           </div>
