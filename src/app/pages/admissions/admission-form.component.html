@@ -77,6 +77,18 @@
             <small class="hint">Heure d’arrivée du patient au service.</small>
           </div>
 
+
+          <div class="field">
+            <label>Lit du patient</label>
+            <input
+              name="lit"
+              class="input"
+              [(ngModel)]="model.lit"
+              [disabled]="loading()"
+            />
+            <small class="hint">Heure d’arrivée du patient au service.</small>
+          </div>
+
           <div class="field span-2">
             <label>Motif</label>
             <select class="input" [(ngModel)]="model.motif" [disabled]="loading()">

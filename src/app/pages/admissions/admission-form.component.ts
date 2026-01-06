@@ -31,6 +31,7 @@ export class AdmissionFormComponent {
     patientId: 0,
     motif: this.motifs[0],
     dateEntree: '',
+    lit: '',
     histoireMaladie: '',
   };
 
@@ -124,6 +125,7 @@ constructor(
       patientId: 0,
       motif: this.motifs[0],
       dateEntree: this.nowDateTimeLocal(),
+      lit: '',
       histoireMaladie: '',
     };
   }
