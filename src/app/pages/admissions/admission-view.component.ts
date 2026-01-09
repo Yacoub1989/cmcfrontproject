@@ -40,7 +40,7 @@ export class AdmissionViewComponent {
 
     this.admissionService.get(id).subscribe({
       next: (a) => {
-        // normaliser dateEntree si besoin (ex: "2026-01-04T10:20:00" => "2026-01-04 10:20")
+        // ✅ Normalisation de dateEntree pour affichage
         const normalized: Admission = {
           ...a,
           dateEntree: this.prettyDateTime((a as any)?.dateEntree),
@@ -56,16 +56,27 @@ export class AdmissionViewComponent {
     });
   }
 
-  private prettyDateTime(v: any): string {
-    if (!v) return '-';
-    const s = String(v);
-    // "YYYY-MM-DDTHH:mm:ss" -> "YYYY-MM-DD HH:mm"
-    if (s.includes('T')) return s.substring(0, 16).replace('T', ' ');
-    // "YYYY-MM-DD" -> "YYYY-MM-DD"
-    return s.substring(0, 10);
+  // ✅ getters “safe” pour le HTML (pas de as any dans template)
+  get lit(): string {
+    const a: any = this.admission();
+    const v = a?.lit;
+    return v ? String(v) : '-';
+  }
+
+  get histoireMaladie(): string {
+    const a: any = this.admission();
+    const v = a?.histoireMaladie;
+    return v ? String(v) : '—';
   }
 
   goEdit() {
     this.router.navigate(['/admissions', this.id, 'edit']);
+  }
+
+  private prettyDateTime(v: any): string {
+    if (!v) return '-';
+    const s = String(v);
+    if (s.includes('T')) return s.substring(0, 16).replace('T', ' ');
+    return s.substring(0, 10);
   }
 }
