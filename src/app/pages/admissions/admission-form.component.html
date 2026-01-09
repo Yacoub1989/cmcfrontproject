@@ -77,16 +77,17 @@
             <small class="hint">Heure d’arrivée du patient au service.</small>
           </div>
 
-
           <div class="field">
-            <label>Lit du patient</label>
-            <input
-              name="lit"
-              class="input"
-              [(ngModel)]="model.lit"
-              [disabled]="loading()"
-            />
-            <small class="hint">Heure d’arrivée du patient au service.</small>
+          <label>lit du patient</label>
+          <input
+            name="lit"
+            class="input"
+            type="text"
+            [(ngModel)]="model.lit"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="Ex: A1 / USIC-12"
+            [disabled]="loading()"
+          />
           </div>
 
           <div class="field span-2">

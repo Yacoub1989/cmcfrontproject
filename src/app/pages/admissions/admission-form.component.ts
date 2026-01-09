@@ -63,6 +63,7 @@ constructor(
       next: (a) => {
         this.model = {
           ...a,
+          lit: (a as any)?.lit ?? '',
           dateEntree: this.toDateTimeLocal((a as any)?.dateEntree),
         } as Admission;
 

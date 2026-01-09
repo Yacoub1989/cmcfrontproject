@@ -1,0 +1,66 @@
+.page { padding: 28px; max-width: 1100px; margin: 0 auto; }
+
+.page-header{
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:16px; margin-bottom:16px;
+}
+
+.header-actions{ display:flex; gap:10px; align-items:center; }
+
+h1{ margin:0; font-size:28px; letter-spacing:-0.02em; }
+.subtitle{ margin:6px 0 0; color:#667085; font-size:14px; }
+
+.meta{ margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; }
+.pill{
+  display:inline-flex; align-items:center; gap:8px;
+  background:#f2f4f7; border:1px solid #eaecf0;
+  color:#344054; padding:8px 10px; border-radius:999px;
+  font-size:13px; font-weight:700;
+}
+.dot{ width:8px; height:8px; border-radius:50%; background:#12b76a; }
+
+.card{
+  background:#fff; border:1px solid #eaecf0; border-radius:16px;
+  box-shadow: 0 10px 30px rgba(16,24,40,.06);
+  padding:18px;
+}
+
+.kv{
+  display:grid;
+  grid-template-columns: 180px 1fr;
+  gap:10px 16px;
+  align-items:center;
+}
+.k{ color:#475467; font-weight:700; font-size:13px; }
+.v{ color:#101828; font-size:14px; }
+.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+.badge{
+  display:inline-flex; align-items:center;
+  padding:8px 10px; border-radius:999px;
+  background:#eff8ff; border:1px solid #b2ddff;
+  color:#175cd3; font-weight:800; font-size:13px;
+}
+
+.sep{ height:1px; background:#eaecf0; margin:16px 0; }
+
+.block-h{ font-weight:900; color:#101828; margin-bottom:6px; }
+.block-p{ color:#344054; line-height:1.6; white-space:pre-wrap; }
+
+.btn{
+  border-radius:12px; padding:10px 14px; font-weight:800;
+  border:1px solid transparent; cursor:pointer;
+}
+.btn:disabled{ opacity:.6; cursor:not-allowed; }
+.btn-primary{ background:#0b5cff; color:#fff; }
+.btn-outline{ background:#fff; border-color:#d0d5dd; color:#344054; text-decoration:none; }
+
+.alert{
+  margin-top:14px;
+  display:flex; gap:10px; align-items:center;
+  border:1px solid #fecdca; background:#fffbfa; color:#b42318;
+  padding:12px 14px; border-radius:14px;
+}
+.alert-dot{ width:10px; height:10px; border-radius:50%; background:#f04438; }
+
+.skeleton{ color:#667085; font-weight:700; }

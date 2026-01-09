@@ -1,0 +1,61 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Détails admission</h1>
+      <p class="subtitle">Cardiologie — Consultation (lecture seule)</p>
+
+      <div class="meta">
+        <span class="pill">
+          <span class="dot ok"></span>
+          Lecture seule
+        </span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a class="btn btn-outline" routerLink="/admissions">← Retour</a>
+      <button class="btn btn-primary" type="button" (click)="goEdit()" [disabled]="loading() || !admission()">
+        Modifier
+      </button>
+    </div>
+  </header>
+
+  <div class="card" *ngIf="!loading() && admission() as a">
+    <div class="kv">
+      <div class="k">ID</div>
+      <div class="v mono">{{ a.id ?? '-' }}</div>
+
+      <div class="k">Patient ID</div>
+      <div class="v mono">{{ a.patientId ?? '-' }}</div>
+
+      <div class="k">Date d’entrée</div>
+      <div class="v mono">{{ a.dateEntree || '-' }}</div>
+
+      <div class="k">Lit</div>
+      <div class="v mono">{{ (a as any).lit || '-' }}</div>
+
+      <div class="k">Motif</div>
+      <div class="v">
+        <span class="badge">{{ a.motif || '-' }}</span>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="block">
+      <div class="block-h">Histoire de la maladie</div>
+      <div class="block-p">
+        {{ (a as any).histoireMaladie || '—' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="loading()">
+    <div class="skeleton">Chargement…</div>
+  </div>
+
+  <div class="alert" *ngIf="err()">
+    <span class="alert-dot"></span>
+    <span>{{ err() }}</span>
+  </div>
+</div>

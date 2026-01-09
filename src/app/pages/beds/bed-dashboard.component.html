@@ -1,0 +1,98 @@
+<div class="page">
+  <div class="top">
+    <div>
+      <h1>Beds dashboard</h1>
+      <p class="subtitle">Service de Cardiologie — état des lits</p>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn btn-outline" (click)="refresh()" [disabled]="loading()">
+        <span *ngIf="!loading()">Rafraîchir</span>
+        <span *ngIf="loading()">Chargement…</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Total</div>
+      <div class="value">{{ total() }}</div>
+    </div>
+    <div class="stat">
+      <div class="label">Disponibles</div>
+      <div class="value">{{ disponiblesCount() }}</div>
+    </div>
+    <div class="stat">
+      <div class="label">Occupés</div>
+      <div class="value">{{ occupesCount() }}</div>
+    </div>
+    <div class="stat">
+      <div class="label">Hors service</div>
+      <div class="value">{{ horsServiceCount() }}</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="bed-card"
+         *ngFor="let b of bedCards()"
+         [class.bed-available]="b.status==='DISPONIBLE'"
+         [class.bed-occupied]="b.status==='OCCUPE'"
+         [class.bed-oos]="b.status==='HORS_SERVICE'">
+
+      <div class="bed-head">
+        <div class="bed-code">
+          <span class="bed-pill">Lit</span>
+          <span class="mono">{{ b.code }}</span>
+        </div>
+
+        <div class="bed-status">
+          <span class="badge badge-green" *ngIf="b.status==='DISPONIBLE'">Disponible</span>
+          <span class="badge badge-red" *ngIf="b.status==='OCCUPE'">Occupé</span>
+          <span class="badge badge-gray" *ngIf="b.status==='HORS_SERVICE'">Hors service</span>
+        </div>
+      </div>
+
+      <!-- CONTENU -->
+      <ng-container *ngIf="b.status==='OCCUPE'; else freeTpl">
+        <div class="patient">
+          <div class="avatar">{{ initials(b.admission) }}</div>
+          <div class="p-text">
+            <div class="p-name">{{ patientFullName(b.admission) }}</div>
+            <div class="p-sub mono">Patient ID: {{ b.admission?.patientId }}</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="k">Motif</div>
+          <div class="v">{{ b.admission?.motif }}</div>
+        </div>
+
+        <div class="row">
+          <div class="k">Entrée</div>
+          <div class="v mono">{{ dateOnly(b.admission?.dateEntree) }}</div>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-outline" [routerLink]="['/admissions', b.admission?.id, 'edit']">
+            Modifier
+          </a>
+        </div>
+      </ng-container>
+
+      <ng-template #freeTpl>
+        <div class="empty">
+          <div class="empty-icon">🛏️</div>
+          <div class="empty-title" *ngIf="b.status==='DISPONIBLE'">Lit disponible</div>
+          <div class="empty-title" *ngIf="b.status==='HORS_SERVICE'">Indisponible</div>
+          <div class="empty-sub" *ngIf="b.status==='DISPONIBLE'">Tu peux créer une admission et affecter ce lit.</div>
+        </div>
+
+        <div class="actions" *ngIf="b.status==='DISPONIBLE'">
+          <a class="btn btn-primary" [routerLink]="['/admissions/new']" [queryParams]="{ lit: b.code }">
+            + Nouvelle admission
+          </a>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,60 +1,122 @@
 import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BedService } from '../../services/bed.service';
-import { Bed } from '../../models/bed.model';
+import { RouterLink } from '@angular/router';
+import { AdmissionService } from '../../services/admission.service';
+import { Admission } from '../../models/admission.model';
+
+type BedStatus = 'DISPONIBLE' | 'OCCUPE' | 'HORS_SERVICE';
+
+type BedCard = {
+  code: string;              // ex: "A1"
+  status: BedStatus;
+  admission?: Admission;     // si occupé
+};
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
-  template: `
-  <h2 style="margin:0;">Beds dashboard</h2>
-
-  <div style="margin-top:12px; display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;">
-    <div class="kpi">Total<br><b>{{ beds().length }}</b></div>
-    <div class="kpi">Disponibles<br><b>{{ kpiDisponible() }}</b></div>
-    <div class="kpi">Occupés<br><b>{{ kpiOccupe() }}</b></div>
-    <div class="kpi">Hors service<br><b>{{ kpiHS() }}</b></div>
-  </div>
-
-  <div style="margin-top:12px; display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
-    <div *ngFor="let b of beds()" class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div style="font-weight:700;">{{ b.code }}</div>
-        <span class="badge">{{ b.status }}</span>
-      </div>
-
-      <div style="margin-top:8px; color:#374151;">
-        <div *ngIf="b.service">Service: {{ b.service }}</div>
-
-        <div *ngIf="b.status === 'OCCUPE'">
-          Patient: <b>{{ b.patientNom }} {{ b.patientPrenom }}</b><br>
-          Admission: {{ b.admissionId }}<br>
-          Sortie estimée: {{ b.dateSortieEstimee || '-' }}
-        </div>
-
-        <div *ngIf="b.status !== 'OCCUPE'">—</div>
-      </div>
-    </div>
-  </div>
-
-  <style>
-    .kpi{border:1px solid #e5e7eb; border-radius:14px; padding:12px; background:#fff;}
-    .card{border:1px solid #e5e7eb; border-radius:14px; padding:12px; background:#fff;}
-    .badge{font-size:12px; border:1px solid #e5e7eb; padding:4px 8px; border-radius:999px;}
-  </style>
-  `,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './bed-dashboard.component.html',
+  styleUrls: ['./bed-dashboard.component.css'],
 })
 export class BedDashboardComponent {
-  beds = signal<Bed[]>([]);
+  // ✅ Définis tes 8 lits ici
+  beds = signal<string[]>(['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8']);
 
-  kpiDisponible = computed(() => this.beds().filter(b => b.status === 'DISPONIBLE').length);
-  kpiOccupe = computed(() => this.beds().filter(b => b.status === 'OCCUPE').length);
-  kpiHS = computed(() => this.beds().filter(b => b.status === 'HORS_SERVICE').length);
+  // (optionnel) lits hors service
+  outOfService = signal<Set<string>>(new Set<string>([])); // ex: new Set(['A8'])
 
-  constructor(private bedService: BedService) {
-    this.bedService.dashboard().subscribe({
-      next: (res) => this.beds.set(res),
-      error: () => this.beds.set([]),
+  admissions = signal<Admission[]>([]);
+  loading = signal(false);
+
+  // 🔎 map lit -> admission la plus récente (ou active)
+  private bedToAdmission = computed(() => {
+    const map = new Map<string, Admission>();
+
+    for (const a of this.admissions()) {
+      const lit = (a as any)?.lit ? String((a as any).lit).trim() : '';
+      if (!lit) continue;
+
+      // si plusieurs admissions sur le même lit, prendre la plus récente (dateEntree)
+      const current = map.get(lit);
+      if (!current) {
+        map.set(lit, a);
+        continue;
+      }
+
+      const d1 = new Date(String((a as any).dateEntree || '')).getTime() || 0;
+      const d2 = new Date(String((current as any).dateEntree || '')).getTime() || 0;
+      if (d1 >= d2) map.set(lit, a);
+    }
+
+    return map;
+  });
+
+  bedCards = computed<BedCard[]>(() => {
+    const oos = this.outOfService();
+    const map = this.bedToAdmission();
+
+    return this.beds().map((code) => {
+      if (oos.has(code)) {
+        return { code, status: 'HORS_SERVICE' as const };
+      }
+
+      const adm = map.get(code);
+      if (adm) return { code, status: 'OCCUPE' as const, admission: adm };
+
+      return { code, status: 'DISPONIBLE' as const };
     });
+  });
+
+  // ✅ Stats top
+  total = computed(() => this.beds().length);
+  horsServiceCount = computed(() => this.outOfService().size);
+  occupesCount = computed(() => this.bedCards().filter(b => b.status === 'OCCUPE').length);
+  disponiblesCount = computed(() => this.total() - this.horsServiceCount() - this.occupesCount());
+
+  constructor(private admissionService: AdmissionService) {
+    this.refresh();
+  }
+
+  refresh() {
+    this.loading.set(true);
+    this.admissionService.list().subscribe({
+      next: (res) => {
+        this.admissions.set(res || []);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.admissions.set([]);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  // UI helpers
+  patientFullName(a?: Admission): string {
+    if (!a) return '';
+    const nom = (a as any)?.patientNom ?? '';
+    const prenom = (a as any)?.patientPrenom ?? '';
+    const full = `${nom} ${prenom}`.trim();
+    return full || `Patient #${(a as any)?.patientId ?? '-'}`;
+  }
+
+  initials(a?: Admission): string {
+    const n = this.patientFullName(a);
+    const parts = n.split(' ').filter(Boolean);
+    const first = parts[0]?.[0] ?? 'P';
+    const second = parts[1]?.[0] ?? '';
+    return (first + second).toUpperCase();
+  }
+
+  dateOnly(v: any): string {
+    if (!v) return '-';
+    const s = String(v);
+    return s.length >= 10 ? s.substring(0, 10) : s;
+  }
+
+  // actions
+  goCreateAdmissionForBed(code: string) {
+    // tu peux ajouter ?lit=A1 si tu veux préremplir dans le form
+    // ex: /admissions/new?lit=A1
   }
 }
