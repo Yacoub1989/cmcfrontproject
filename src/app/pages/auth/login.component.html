@@ -1,0 +1,36 @@
+<div class="page">
+  <div class="card">
+    <div class="brand">
+      <div class="logo">🫀</div>
+      <div>
+        <h1>CMC — Connexion</h1>
+        <p>Plateforme cardiologie • accès sécurisé</p>
+      </div>
+    </div>
+
+    <div class="alert" *ngIf="err()">
+      <span class="dot"></span>
+      <span>{{ err() }}</span>
+    </div>
+
+    <div class="field">
+      <label>Nom d’utilisateur</label>
+      <input class="input" type="text" [(ngModel)]="username" autocomplete="username" />
+    </div>
+
+    <div class="field">
+      <label>Mot de passe</label>
+      <input class="input" type="password" [(ngModel)]="password" autocomplete="current-password" />
+    </div>
+
+    <button class="btn btn-primary" (click)="onLogin()" [disabled]="loading()">
+      <span *ngIf="!loading()">Se connecter</span>
+      <span *ngIf="loading()">Connexion…</span>
+    </button>
+
+    <div class="help">
+      <span>Besoin d’un compte ?</span>
+      <a routerLink="/help" class="link">Contacter l’administrateur</a>
+    </div>
+  </div>
+</div>

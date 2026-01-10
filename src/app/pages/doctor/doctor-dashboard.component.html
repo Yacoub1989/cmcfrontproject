@@ -1,0 +1,118 @@
+<div class="page">
+  <header class="top">
+    <div class="title">
+      <div class="badge">🫀 Cardiologie</div>
+      <h1>Dashboard Docteur</h1>
+      <p>Bienvenue, <b>{{ username() }}</b> — suivi admissions & demandes</p>
+    </div>
+
+    <div class="top-actions">
+      <a class="btn btn-outline" routerLink="/patients">Patients</a>
+      <a class="btn btn-outline" routerLink="/admissions">Admissions</a>
+      <a class="btn btn-primary" routerLink="/doctor/lab/new">+ Demande LABO</a>
+    </div>
+  </header>
+
+  <div class="alert" *ngIf="err()">
+    <span class="dot"></span>
+    <span>{{ err() }}</span>
+  </div>
+
+  <!-- KPI -->
+  <section class="kpis">
+    <div class="kpi">
+      <div class="kpi-h">Admissions aujourd’hui</div>
+      <div class="kpi-v">{{ admissionsToday() }}</div>
+      <div class="kpi-s">Entrées du jour</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-h">Demandes LABO</div>
+      <div class="kpi-v">{{ labTotal() }}</div>
+      <div class="kpi-s">
+        <span class="chip">En attente: {{ labPending() }}</span>
+        <span class="chip">En cours: {{ labInProgress() }}</span>
+        <span class="chip">Terminées: {{ labDone() }}</span>
+      </div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-h">Alertes</div>
+      <div class="kpi-v">{{ alerts() }}</div>
+      <div class="kpi-s">À surveiller</div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <!-- Dernières admissions -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2>Admissions récentes</h2>
+          <p>Les dernières entrées</p>
+        </div>
+        <a routerLink="/admissions" class="link">Voir tout →</a>
+      </div>
+
+      <div class="list">
+        <div class="row" *ngFor="let a of lastAdmissions()">
+          <div class="row-main">
+            <div class="row-title">
+              Admission #{{ a.id }} <span class="muted">• Patient #{{ a.patientId }}</span>
+            </div>
+            <div class="row-sub">
+              <span class="mono">{{ a.dateEntree || '-' }}</span>
+              <span class="sep">•</span>
+              <span class="tag">{{ a.motif || '-' }}</span>
+            </div>
+          </div>
+          <a class="btn btn-outline" [routerLink]="['/admissions', a.id, 'view']">Consulter</a>
+        </div>
+
+        <div class="empty" *ngIf="lastAdmissions().length===0">Aucune admission.</div>
+      </div>
+    </div>
+
+    <!-- Mes demandes labo -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h2>Mes demandes LABO</h2>
+          <p>Statut & résultats</p>
+        </div>
+        <a routerLink="/doctor/lab" class="link">Voir tout →</a>
+      </div>
+
+      <div class="list">
+        <div class="row" *ngFor="let r of lastLab()">
+          <div class="row-main">
+            <div class="row-title">
+              Patient #{{ r.patientId }}
+              <span class="pill" [class.p1]="r.status==='PENDING'"
+                    [class.p2]="r.status==='IN_PROGRESS'"
+                    [class.p3]="r.status==='DONE'">
+                  {{ r.status }}
+                </span>
+            </div>
+            <div class="row-sub">
+              <span class="muted">{{ r.tests }}</span>
+            </div>
+          </div>
+          <a class="btn btn-outline" [routerLink]="['/labo/requests', r.id]">Détails</a>
+        </div>
+
+        <div class="empty" *ngIf="lastLab().length===0">Aucune demande labo.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <button class="btn btn-ghost" (click)="refresh()" [disabled]="loading()">
+      {{ loading() ? 'Actualisation…' : 'Actualiser' }}
+    </button>
+
+    <button class="btn btn-outline" (click)="logout()">
+      Déconnexion
+    </button>
+  </footer>
+</div>

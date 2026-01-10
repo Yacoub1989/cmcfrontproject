@@ -1,0 +1,15 @@
+.page{padding:28px;max-width:1100px;margin:0 auto}
+    .page-header{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px}
+    h1{margin:0;font-size:28px}
+    .subtitle{margin:6px 0 0;color:#667085}
+    .card{background:#fff;border:1px solid #eaecf0;border-radius:16px;box-shadow:0 10px 30px rgba(16,24,40,.06);padding:18px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .span-2{grid-column:1/-1}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.span-2{grid-column:auto}}
+    label{display:block;font-weight:800;font-size:13px;margin-bottom:6px;color:#344054}
+    .input{width:100%;border:1px solid #d0d5dd;border-radius:12px;padding:12px;outline:none}
+    .actions{margin-top:14px;display:flex;justify-content:flex-end}
+    .btn{border-radius:12px;padding:10px 14px;font-weight:800;border:1px solid transparent;cursor:pointer;text-decoration:none;display:inline-flex}
+    .btn-primary{background:#0b5cff;color:#fff}
+    .btn-outline{background:#fff;border-color:#d0d5dd;color:#344054}
+    .alert{margin-top:12px;color:#b42318;font-weight:700}

@@ -13,6 +13,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
       <a routerLink="/patients" routerLinkActive="active" class="nav">Patients</a>
       <a routerLink="/admissions" routerLinkActive="active" class="nav">Admissions</a>
       <a routerLink="/beds" routerLinkActive="active" class="nav">Beds dashboard</a>
+      <a routerLink="/doctor" routerLinkActive="active" class="nav">Dashboard docteur</a>
 
       <style>
         .nav{display:block; padding:10px 12px; border-radius:10px; text-decoration:none; color:#111827; margin-bottom:6px;}

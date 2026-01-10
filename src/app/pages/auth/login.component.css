@@ -1,0 +1,83 @@
+ .page{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(11,92,255,.10), transparent 60%),
+                  radial-gradient(900px 500px at 90% 0%, rgba(18,183,106,.10), transparent 55%),
+                  #f8fafc;
+    }
+    .card{
+      width:100%;
+      max-width:460px;
+      background:#fff;
+      border:1px solid #eaecf0;
+      border-radius:18px;
+      padding:18px;
+      box-shadow: 0 18px 40px rgba(16,24,40,.08);
+    }
+    .brand{
+      display:flex; gap:12px; align-items:center;
+      padding:8px 6px 14px;
+      border-bottom:1px solid #eaecf0;
+      margin-bottom:14px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      display:grid;place-items:center;
+      background:#eef4ff;border:1px solid #dbe7ff;
+      font-size:20px;
+    }
+    h1{margin:0;font-size:22px;letter-spacing:-0.02em}
+    p{margin:4px 0 0;color:#667085;font-size:13px}
+    .field{margin-top:12px}
+    label{display:block;font-size:13px;font-weight:800;color:#344054;margin-bottom:6px}
+    .input{
+      width:100%;
+      border:1px solid #d0d5dd;
+      border-radius:12px;
+      padding:12px;
+      outline:none;
+      background:#fff;
+      transition: box-shadow .15s, border-color .15s;
+    }
+    .input:focus{
+      border-color:#0b5cff;
+      box-shadow:0 0 0 4px rgba(11,92,255,.15);
+    }
+    .btn{
+      width:100%;
+      margin-top:14px;
+      border-radius:12px;
+      padding:12px 14px;
+      font-weight:900;
+      border:1px solid transparent;
+      cursor:pointer;
+    }
+    .btn:disabled{opacity:.65;cursor:not-allowed}
+    .btn-primary{background:#0b5cff;color:#fff}
+    .btn-primary:hover{filter:brightness(1.03)}
+    .alert{
+      margin-top:12px;
+      display:flex; gap:10px; align-items:flex-start;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid #fecdca;
+      background:#fef3f2;
+      color:#b42318;
+      font-weight:800;
+      font-size:13px;
+    }
+    .alert .dot{
+      margin-top:4px;
+      width:8px;height:8px;border-radius:50%;
+      background:#f04438;
+      flex:0 0 auto;
+    }
+    .help{
+      margin-top:12px;
+      display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+      color:#667085;font-size:13px;
+    }
+    .link{color:#0b5cff;text-decoration:none;font-weight:800}
+    .link:hover{text-decoration:underline}

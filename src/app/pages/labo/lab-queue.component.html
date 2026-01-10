@@ -1,0 +1,19 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>File LABO</h1>
+      <p class="subtitle">Demandes en attente</p>
+    </div>
+  </header>
+
+  <div class="card">
+    <div class="row" *ngFor="let r of items()">
+      <div>
+        <div class="title">Patient #{{ r.patientId }} — {{ r.tests }}</div>
+        <div class="meta">Statut: <b>{{ r.status }}</b> • Demandé par: {{ r.requestedBy }}</div>
+      </div>
+      <a class="btn btn-outline" [routerLink]="['/labo/requests', r.id]">Ouvrir</a>
+    </div>
+    <div class="empty" *ngIf="items().length===0">Rien en attente.</div>
+  </div>
+</div>

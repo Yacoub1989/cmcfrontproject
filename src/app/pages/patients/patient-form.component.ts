@@ -24,7 +24,9 @@ export class PatientFormComponent implements OnInit {
   patientId?: number;
 
   // ✅ adapte si besoin (AWS / local)
-  private API_BASE = 'http://cmc7.eba-phvqmhxm.eu-north-1.elasticbeanstalk.com/api';
+  //private API_BASE = 'http://cmc7.eba-phvqmhxm.eu-north-1.elasticbeanstalk.com/api';
+
+  private API_BASE = 'http://localhost:7777/api';
 
   form = this.fb.group({
     nni: [''],
