@@ -29,10 +29,6 @@
           Réinitialiser
         </button>
         <a class="btn btn-outline" routerLink="/admissions">Annuler</a>
-        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="loading()">
-          <span *ngIf="!loading()">{{ saveLabel }}</span>
-          <span *ngIf="loading()">{{ isEdit() ? 'Mise à jour…' : 'Enregistrement…' }}</span>
-        </button>
       </div>
     </div>
 
@@ -100,19 +96,117 @@
         </div>
       </section>
 
+
+
       <!-- SECTION 2 -->
+
       <section class="section">
         <div class="section-title">
           <div class="icon">🩺</div>
           <div>
-            <div class="section-h">Clinique</div>
-            <div class="section-p">Histoire de la maladie</div>
+            <div class="section-h">
+            <h2>Section docteur</h2>
+          </div>
           </div>
         </div>
 
+
         <div class="grid">
           <div class="field span-2">
-            <label>Histoire de la maladie</label>
+            <h3>Facteurs de risque cardiovasculaire</h3>
+
+            <div class="checkbox-list">
+              <label class="checkbox-item" *ngFor="let f of facteursRisque">
+                <input
+                  type="checkbox"
+                  [value]="f"
+                  (change)="
+                   (model.facteursRisque = model.facteursRisque || []);
+                   $any($event.target).checked
+                   ? model.facteursRisque.push(f)
+                   : model.facteursRisque.splice(model.facteursRisque.indexOf(f), 1)"
+
+                  [checked]="(model.facteursRisque || []).includes(f)"
+                  [disabled]="loading()"
+                />
+                <span>{{ f }}</span>
+              </label>
+            </div>
+
+            <small class="hint">
+              Cochez les facteurs de risque présents chez le patient.
+            </small>
+          </div>
+        </div>
+        <div class="field span-2">
+        </div>
+
+
+        <div class="grid section-separator">
+        <div class="grid vitals-grid">
+          <div class="field">
+            <label>TA (mmHg)</label>
+            <div class="input-unit">
+              <input
+                class="input"
+                type="text"
+                name="ta"
+                placeholder="120/80"
+                [(ngModel)]="model.ta"
+                [disabled]="loading()"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>FC (bpm)</label>
+            <div class="input-unit">
+              <input
+                class="input"
+                type="number"
+                name="fc"
+                placeholder="75"
+                [(ngModel)]="model.fc"
+                [disabled]="loading()"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>FR (cycle/min)</label>
+            <div class="input-unit">
+              <input
+                class="input"
+                type="number"
+                name="fr"
+                placeholder="18"
+                [(ngModel)]="model.fr"
+                [disabled]="loading()"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>SpO₂ (%)</label>
+            <div class="input-unit">
+              <input
+                class="input"
+                type="number"
+                name="spo2"
+                placeholder="98"
+                [(ngModel)]="model.spo2"
+                [disabled]="loading()"
+              />
+            </div>
+          </div>
+        </div>
+        </div>
+
+
+
+        <div class="grid section-separator">
+          <div class="field span-2">
+            <h3>Histoire de la maladie</h3>
             <textarea
               class="input textarea"
               rows="6"
@@ -123,8 +217,111 @@
             <small class="hint">Ex: douleur thoracique, dyspnée, palpitations, etc.</small>
           </div>
         </div>
+
+
+
+        <div class="grid section-separator">
+      <div class="field span-2">
+        <h3>Examen cardio-vasculaire</h3>
+        <textarea
+          class="input textarea"
+          rows="6"
+          name="cardiovasculaire"
+          [(ngModel)]="model.cardiovasculaire"
+          placeholder="Décrire brièvement l’histoire, symptômes, facteurs de risque..."
+          [disabled]="loading()"
+        ></textarea>
+        <small class="hint">Ex: douleur thoracique, dyspnée, palpitations, etc.</small>
+      </div>
+    </div>
+
+
+
+        <div class="grid section-separator">
+      <div class="field span-2">
+        <h3>Examen general</h3>
+        <textarea
+          class="input textarea"
+          rows="6"
+          name="examengeneral"
+          [(ngModel)]="model.examengeneral"
+          placeholder="Décrire brièvement l’histoire, symptômes, facteurs de risque..."
+          [disabled]="loading()"
+        ></textarea>
+        <small class="hint">Ex: douleur thoracique, dyspnée, palpitations, etc.</small>
+      </div>
+    </div>
+
+
+
+        <div class="grid section-separator">
+      <div class="field span-2">
+        <h3>Examen cardiogramme</h3>
+        <textarea
+          class="input textarea"
+          rows="6"
+          name="cardiogramme"
+          [(ngModel)]="model.cardiogramme"
+          placeholder="Décrire brièvement l’histoire, symptômes, facteurs de risque..."
+          [disabled]="loading()"
+        ></textarea>
+        <small class="hint">Ex: douleur thoracique, dyspnée, palpitations, etc.</small>
+      </div>
+    </div>
+
+
+
+
+        <div class="grid section-separator">
+      <div class="field span-2">
+        <h3>Conclusion clinique</h3>
+        <textarea
+          class="input textarea"
+          rows="6"
+          name="conclusion"
+          [(ngModel)]="model.conclusion"
+          placeholder="Décrire brièvement l’histoire, symptômes, facteurs de risque..."
+          [disabled]="loading()"
+        ></textarea>
+        <small class="hint">Ex: douleur thoracique, dyspnée, palpitations, etc.</small>
+      </div>
+    </div>
+
+
+
+        <div class="grid section-separator">
+      <div class="field span-2">
+        <h3>Decision therapeotique</h3>
+        <textarea
+          class="input textarea"
+          rows="6"
+          name="decision"
+          [(ngModel)]="model.decision"
+          placeholder="Décrire brièvement l’histoire, symptômes, facteurs de risque..."
+          [disabled]="loading()"
+        ></textarea>
+        <small class="hint">Ex: douleur thoracique, dyspnée, palpitations, etc.</small>
+      </div>
+    </div>
       </section>
     </div>
+
+    <div class="form-actions-bottom">
+      <a class="btn btn-outline" routerLink="/admissions">Annuler</a>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="save()"
+        [disabled]="loading()"
+      >
+        <span *ngIf="!loading()">{{ saveLabel }}</span>
+        <span *ngIf="loading()">
+      {{ isEdit() ? 'Mise à jour…' : 'Enregistrement…' }}
+    </span>
+      </button>
+    </div>
+
 
     <div class="footer-note">
       <span class="dot ok"></span>

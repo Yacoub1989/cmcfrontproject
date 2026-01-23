@@ -1,9 +1,19 @@
 export interface Admission {
   id?: number;
   patientId: number;
-  dateEntree?: string; // ISO
-  motif: string;       // 1 des 8 pathologies (liste côté UI pour l’instant)
+  dateEntree?: string;
+  motif: string;
   histoireMaladie?: string;
+  cardiovasculaire?: string;
+  examengeneral?: string;
+  cardiogramme?: string;
+  conclusion?: string;
+  decision?: string;
   patientNom?: string;
   lit?: string;
+  facteursRisque?: string[];
+  ta?: string;
+  fc?: number;
+  fr?: number;
+  spo2?: number;
 }

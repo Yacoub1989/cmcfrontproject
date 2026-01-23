@@ -126,3 +126,37 @@ h1{ margin:0; font-size:28px; letter-spacing:-0.02em; }
   color:#667085; font-size:13px;
   padding-top:14px; border-top:1px solid #eaecf0;
 }
+
+.checkbox-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.checkbox-item input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.section-separator {
+  margin-top: 40px; /* ajuste : 30 / 40 / 50px selon ton goût */
+}
+.form-actions-bottom {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+

@@ -27,12 +27,31 @@ export class AdmissionFormComponent {
     'Autre urgence cardio',
   ];
 
+
+facteursRisque = [
+  'Hypertension artérielle',
+  'Diabète',
+  'Tabagisme',
+  'Dyslipidémie',
+  'Heredité'
+];
+
   model: Admission = {
     patientId: 0,
     motif: this.motifs[0],
     dateEntree: '',
     lit: '',
     histoireMaladie: '',
+    cardiovasculaire: '',
+    examengeneral: '',
+    cardiogramme: '',
+    conclusion: '',
+    decision: '',
+    facteursRisque: [],
+    ta: '',
+    fc: undefined,
+    fr: undefined,
+    spo2: undefined,
   };
 
   private id?: number;
@@ -65,6 +84,7 @@ constructor(
           ...a,
           lit: (a as any)?.lit ?? '',
           dateEntree: this.toDateTimeLocal((a as any)?.dateEntree),
+          facteursRisque: (a as any)?.facteursRisque ?? [],
         } as Admission;
 
         this.loading.set(false);
@@ -128,6 +148,12 @@ constructor(
       dateEntree: this.nowDateTimeLocal(),
       lit: '',
       histoireMaladie: '',
+      cardiovasculaire: '',
+      examengeneral: '',
+      cardiogramme: '',
+      conclusion: '',
+      decision: '',
+      facteursRisque: [],
     };
   }
 
@@ -148,6 +174,7 @@ constructor(
       ...this.model,
       dateEntree: this.model.dateEntree || this.nowDateTimeLocal(),
     };
+
 
     const req = this.isEdit() && this.id
       ? this.admissionService.update(this.id, payload)
