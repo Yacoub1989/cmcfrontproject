@@ -17,6 +17,13 @@
       <button class="btn btn-primary" type="button" (click)="goEdit()" [disabled]="loading() || !admission()">
         Modifier
       </button>
+      <button
+        type="button"
+        class="btn btn-outline"
+        (click)="goExploration()">
+        🧪 Exploration
+      </button>
+
     </div>
   </header>
 
@@ -48,6 +55,95 @@
         {{ histoireMaladie }}
       </div>
     </div>
+
+    <div class="block">
+      <div class="block-h">Cardio vasculaire</div>
+      <div class="block-p">
+        {{ a.cardiovasculaire }}
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h">Examen general</div>
+      <div class="block-p">
+        {{ a.examengeneral }}
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h">Electro cardiogramme</div>
+      <div class="block-p">
+        {{ a.cardiogramme }}
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h">Conclusion clinique</div>
+      <div class="block-p">
+        {{ a.conclusion }}
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h">Decision therapeutique</div>
+      <div class="block-p">
+        {{ a.decision }}
+      </div>
+    </div>
+
+
+    <section class="section">
+      <div class="section-title">
+        <div class="icon">🧪</div>
+        <div>
+          <div class="section-h">Explorations demandées</div>
+          <div class="section-p">Demandes liées à cette admission</div>
+        </div>
+      </div>
+
+      <div class="pill" *ngIf="expLoading()">Chargement…</div>
+
+      <div class="empty" *ngIf="!expLoading() && explorations().length === 0">
+        Aucune demande d’exploration pour cette admission.
+      </div>
+
+      <div class="exp-list" *ngIf="explorations().length > 0">
+        <div class="exp-card" *ngFor="let e of explorations()">
+          <div class="exp-head">
+            <div class="exp-title">
+              <strong>#{{ e.id }}</strong>
+              <span class="muted">• {{ statusLabel(e.status) }}</span>
+            </div>
+
+            <span class="chip urgent" *ngIf="e.urgence === 'URGENT'">⚡ Urgent</span>
+            <span class="chip normal" *ngIf="e.urgence !== 'URGENT'">Normal</span>
+          </div>
+
+          <div class="chips">
+            <span class="chip" *ngFor="let t of e.explorations">{{ labelType(t) }}</span>
+          </div>
+
+          <div class="note" *ngIf="e.note">
+            <div class="note-title">Note médecin</div>
+            <div class="note-body">{{ e.note }}</div>
+          </div>
+
+          <div class="note" *ngIf="e.resultText || e.videoUrl">
+            <div class="note-title">Résultat agent</div>
+            <div class="note-body" *ngIf="e.resultText">{{ e.resultText }}</div>
+
+            <video *ngIf="e.videoUrl" class="video" controls>
+              <source [src]="e.videoUrl" />
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+
+
   </div>
 
   <div class="card" *ngIf="loading()">

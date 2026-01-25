@@ -64,3 +64,19 @@ h1{ margin:0; font-size:28px; letter-spacing:-0.02em; }
 .alert-dot{ width:10px; height:10px; border-radius:50%; background:#f04438; }
 
 .skeleton{ color:#667085; font-weight:700; }
+
+
+.exp-list { display:flex; flex-direction:column; gap:12px; }
+.exp-card { border:1px solid #eef2f7; background:#fbfdff; border-radius:16px; padding:14px; }
+.exp-head { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.exp-title { color:#111827; font-weight:900; }
+.muted { color:#6b7280; font-weight:700; margin-left:8px; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.chip { padding:7px 10px; border-radius:999px; border:1px solid #e5e7eb; background:#fff; font-weight:900; font-size:12px; }
+.chip.urgent { border-color:#fecaca; background:#fff7ed; }
+.chip.normal { background:#f8fafc; }
+.note { margin-top:10px; border:1px dashed #dbe3ee; border-radius:14px; padding:12px; background:#fff; }
+.note-title { font-weight:900; font-size:12px; margin-bottom:6px; color:#111827; }
+.note-body { color:#374151; font-size:14px; }
+.video { width:100%; border-radius:14px; border:1px solid #e5e7eb; background:#000; margin-top:10px; }
+.empty { padding:14px; border:1px dashed #dbe3ee; border-radius:14px; color:#6b7280; text-align:center; }

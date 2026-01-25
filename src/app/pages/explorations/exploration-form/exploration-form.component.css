@@ -1,0 +1,246 @@
+/* === Layout page (comme Patient) === */
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 22px 24px 40px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111827;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Pills */
+.meta {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.dot.ok { background: #22c55e; }
+
+/* Back link */
+.link-back {
+  text-decoration: none;
+  font-weight: 700;
+  color: #2563eb;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.link-back:hover { background: #eff6ff; }
+
+/* Card */
+.card {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px 16px 10px;
+}
+
+/* Alert */
+.alert {
+  display: flex;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #7f1d1d;
+  margin: 10px 0 16px;
+  align-items: flex-start;
+}
+.alert-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #ef4444;
+  margin-top: 4px;
+}
+
+/* Sections */
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.section {
+  border: 1px solid #eef2f7;
+  background: #fbfdff;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.section-h {
+  font-weight: 800;
+  color: #111827;
+  font-size: 16px;
+}
+
+.section-p {
+  margin-top: 3px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.span-2 { grid-column: span 2; }
+@media (max-width: 760px) {
+  .span-2 { grid-column: span 1; }
+}
+
+/* Fields */
+.field label {
+  display: block;
+  font-weight: 800;
+  font-size: 13px;
+  color: #111827;
+  margin-bottom: 7px;
+}
+
+.hint {
+  display: block;
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* Inputs (comme Patient) */
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 14px;
+  border: 1px solid #dbe3ee;
+  background: #fff;
+  padding: 11px 12px;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+.textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+/* Buttons bottom */
+.form-actions-bottom {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 14px;
+  margin-top: 16px;
+  border-top: 1px solid #eef2f7;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border-radius: 14px;
+  padding: 11px 16px;
+  font-weight: 800;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-outline {
+  background: #fff;
+  border-color: #dbe3ee;
+  color: #111827;
+}
+.btn-outline:hover { background: #f8fafc; }
+
+.btn-primary {
+  background: #60a5fa;
+  border-color: #60a5fa;
+  color: #fff;
+}
+.btn-primary:hover { filter: brightness(0.98); }
+
+/* Footer note */
+.footer-note {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 6px 6px;
+  color: #6b7280;
+  font-size: 13px;
+}

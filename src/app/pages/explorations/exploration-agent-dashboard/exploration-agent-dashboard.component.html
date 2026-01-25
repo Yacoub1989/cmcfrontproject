@@ -1,0 +1,106 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Dashboard explorations</h1>
+      <p class="subtitle">Espace agent — gestion des demandes d’exploration</p>
+
+      <div class="meta">
+        <span class="pill">
+          <span class="dot ok"></span>
+          {{ statusLabel(status()) }}
+        </span>
+
+        <span class="pill" *ngIf="loading()">Chargement…</span>
+      </div>
+    </div>
+
+    <button class="btn btn-outline" type="button" (click)="refresh()" [disabled]="loading()">
+      ↻ Actualiser
+    </button>
+  </header>
+
+  <div class="card">
+    <div class="alert" *ngIf="err()">
+      <span class="alert-dot"></span>
+      <span>{{ err() }}</span>
+    </div>
+
+    <!-- Filtres -->
+    <div class="toolbar">
+      <div class="tabs">
+        <button
+          type="button"
+          class="tab"
+          [class.active]="status() === 'DEMANDEE'"
+          (click)="setStatus('DEMANDEE')"
+          [disabled]="loading()"
+        >
+          Demandées
+        </button>
+
+        <button
+          type="button"
+          class="tab"
+          [class.active]="status() === 'EN_COURS'"
+          (click)="setStatus('EN_COURS')"
+          [disabled]="loading()"
+        >
+          En cours
+        </button>
+
+        <button
+          type="button"
+          class="tab"
+          [class.active]="status() === 'TERMINEE'"
+          (click)="setStatus('TERMINEE')"
+          [disabled]="loading()"
+        >
+          Terminées
+        </button>
+      </div>
+
+      <div class="search">
+        <input
+          class="input"
+          type="text"
+          placeholder="Rechercher: patient, admission, type…"
+          [(ngModel)]="q"
+        />
+
+      </div>
+    </div>
+
+    <!-- Liste -->
+    <div class="list">
+      <div class="empty" *ngIf="!loading() && filtered().length === 0">
+        Aucune demande trouvée.
+      </div>
+
+      <div class="row" *ngFor="let r of filtered()">
+        <div class="row-left">
+          <div class="row-title">
+            <span class="patient">{{ r.patientNom || 'Patient' }}</span>
+            <span class="muted">• Admission #{{ r.admissionId }}</span>
+          </div>
+
+          <div class="chips">
+            <span class="chip" *ngFor="let t of r.explorations">{{ labelType(t) }}</span>
+
+            <span class="chip urgent" *ngIf="r.urgence === 'URGENT'">⚡ Urgent</span>
+            <span class="chip normal" *ngIf="r.urgence !== 'URGENT'">Normal</span>
+          </div>
+
+          <div class="note" *ngIf="r.note">
+            {{ r.note }}
+          </div>
+        </div>
+
+        <div class="row-right">
+          <button class="btn btn-primary" type="button" (click)="open(r)">
+            Ouvrir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

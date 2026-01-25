@@ -1,0 +1,59 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Demande d’exploration</h1>
+
+      <p class="subtitle">
+        Admission #{{ admissionId }}
+        <span *ngIf="patientNom">— Patient : <strong>{{ patientNom }}</strong></span>
+      </p>
+    </div>
+
+    <a routerLink="/admissions" class="link-back">← Retour</a>
+  </header>
+
+  <div class="card">
+    <div class="alert" *ngIf="err()">{{ err() }}</div>
+
+    <div class="grid">
+      <div class="field span-2">
+        <label>Explorations demandées</label>
+
+        <div class="checkbox-list">
+          <label class="checkbox-item" *ngFor="let t of types">
+            <input
+              type="checkbox"
+              [checked]="model.explorations.includes(t)"
+              (change)="toggleExploration(t, $any($event.target).checked)"
+              [disabled]="loading()"
+            />
+            <span>{{ labelType(t) }}</span>
+          </label>
+        </div>
+
+        <small class="hint">Tu peux cocher plusieurs examens.</small>
+      </div>
+
+      <div class="field">
+        <label>Urgence</label>
+        <select class="input" [(ngModel)]="model.urgence" name="urgence" [disabled]="loading()">
+          <option value="NORMAL">Normal</option>
+          <option value="URGENT">Urgent</option>
+        </select>
+      </div>
+
+      <div class="field span-2">
+        <label>Note / Motif</label>
+        <textarea class="input textarea" rows="6" [(ngModel)]="model.note" name="note" [disabled]="loading()"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions-bottom">
+      <a class="btn btn-outline" routerLink="/admissions">Annuler</a>
+      <button class="btn btn-primary" type="button" (click)="save()" [disabled]="loading()">
+        <span *ngIf="!loading()">Envoyer la demande</span>
+        <span *ngIf="loading()">Envoi…</span>
+      </button>
+    </div>
+  </div>
+</div>

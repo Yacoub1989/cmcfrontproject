@@ -1,0 +1,118 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Détail exploration</h1>
+
+      <p class="subtitle" *ngIf="request">
+        Admission #{{ request.admissionId }}
+        <span class="sep">•</span>
+        <span *ngIf="request.patientNom">Patient : <strong>{{ request.patientNom }}</strong></span>
+      </p>
+
+      <div class="meta" *ngIf="request">
+        <span class="pill">
+          <span class="dot" [class.ok]="request.status !== 'TERMINEE'" [class.done]="request.status === 'TERMINEE'"></span>
+          Statut : {{ statusLabel(request.status) }}
+        </span>
+
+        <span class="pill" [class.pill-urgent]="request.urgence === 'URGENT'">
+          ⚡ {{ request.urgence === 'URGENT' ? 'Urgent' : 'Normal' }}
+        </span>
+      </div>
+    </div>
+
+    <a class="link-back" routerLink="/explorations/agent">← Dashboard</a>
+  </header>
+
+  <div class="card">
+    <div class="alert" *ngIf="err()">
+      <span class="alert-dot"></span>
+      <span>{{ err() }}</span>
+    </div>
+
+    <!-- Infos demande -->
+    <div class="sections" *ngIf="request">
+      <section class="section">
+        <div class="section-title">
+          <div class="icon">📌</div>
+          <div>
+            <div class="section-h">Demande</div>
+            <div class="section-p">Explorations demandées + note médecin</div>
+          </div>
+        </div>
+
+        <div class="chips">
+          <span class="chip" *ngFor="let t of request.explorations">{{ labelType(t) }}</span>
+        </div>
+
+        <div class="note" *ngIf="request.note">
+          <div class="note-title">Note médecin</div>
+          <div class="note-body">{{ request.note }}</div>
+        </div>
+      </section>
+
+      <!-- Résultat agent -->
+      <section class="section">
+        <div class="section-title">
+          <div class="icon">📝</div>
+          <div>
+            <div class="section-h">Résultat</div>
+            <div class="section-p">Saisie texte + upload vidéo</div>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field span-2">
+            <label>Résultat (texte)</label>
+            <textarea
+              class="input textarea"
+              rows="8"
+              [(ngModel)]="resultText"
+              name="resultText"
+              placeholder="Décrire le résultat, mesures, conclusion…"
+              [disabled]="loading()"
+            ></textarea>
+          </div>
+
+          <div class="field span-2">
+            <label>Vidéo (optionnel)</label>
+            <input
+              class="input"
+              type="file"
+              accept="video/*"
+              (change)="onFileChange($event)"
+              [disabled]="loading()"
+            />
+            <small class="hint">
+              Formats: mp4/mov. (La taille max dépend du serveur)
+            </small>
+          </div>
+
+          <div class="field span-2" *ngIf="result?.videoUrl">
+            <label>Aperçu vidéo</label>
+            <video *ngIf="result?.videoUrl"
+                   [src]="result!.videoUrl"
+                   controls
+                   class="video"
+                   preload="metadata">
+            </video>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- actions -->
+    <div class="form-actions-bottom sticky-actions">
+      <button class="btn btn-outline" type="button" (click)="back()" [disabled]="loading()">Retour</button>
+
+      <button class="btn btn-primary" type="button" (click)="submitResult()" [disabled]="loading()">
+        <span *ngIf="!loading()">Enregistrer résultat</span>
+        <span *ngIf="loading()">Envoi…</span>
+      </button>
+
+      <button class="btn btn-outline" type="button" (click)="markDone()" [disabled]="loading()">
+        ✅ Marquer Terminée
+      </button>
+    </div>
+  </div>
+</div>

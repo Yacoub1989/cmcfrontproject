@@ -1,6 +1,10 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './core/layout/shell.component';
 import { roleGuard } from './guards/role.guard';
+import { ExplorationFormComponent } from './pages/explorations/exploration-form/exploration-form.component';
+import { ExplorationDetailComponent } from './pages/explorations/exploration-detail/exploration-detail.component';
+import { ExplorationAgentDashboardComponent } from './pages/explorations/exploration-agent-dashboard/exploration-agent-dashboard.component';
+
 
 export const routes: Routes = [
   {
@@ -39,6 +43,11 @@ export const routes: Routes = [
       // Labo queue details
       { path: 'labo/queue', loadComponent: () => import('./pages/labo/lab-queue.component').then(m => m.LabQueueComponent) },
       { path: 'labo/requests/:id', loadComponent: () => import('./pages/labo/lab-request-detail.component').then(m => m.LabRequestDetailComponent) },
+
+      { path: 'explorations/new', component: ExplorationFormComponent },
+      { path: 'explorations/agent/:id', component: ExplorationDetailComponent },
+      { path: 'explorations/agent', component: ExplorationAgentDashboardComponent },
+      { path: 'explorations/agent/:id', component: ExplorationDetailComponent },
     ],
   },
 

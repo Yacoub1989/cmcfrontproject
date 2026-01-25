@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AdmissionService } from '../../services/admission.service';
 import { Admission } from '../../models/admission.model';
+import { ExplorationDoctorService, ExplorationView } from '../../services/exploration-doctor.service';
+
 
 @Component({
   standalone: true,
@@ -15,11 +17,15 @@ export class AdmissionViewComponent {
   err = signal('');
   admission = signal<Admission | null>(null);
 
+  explorations = signal<ExplorationView[]>([]);
+  expLoading = signal(false);
+
   private id = 0;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private expService: ExplorationDoctorService,
     private admissionService: AdmissionService
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -32,6 +38,10 @@ export class AdmissionViewComponent {
     }
 
     this.load(this.id);
+
+    if (idParam) {
+        this.loadExplorationsForAdmission(Number(idParam));
+      }
   }
 
   private load(id: number) {
@@ -79,4 +89,45 @@ export class AdmissionViewComponent {
     if (s.includes('T')) return s.substring(0, 16).replace('T', ' ');
     return s.substring(0, 10);
   }
+
+goExploration() {
+  // si on est en création, on empêche
+//  if (!this.isEdit() || !this.id) {
+//    this.err.set("Enregistre l'admission d'abord, puis demande une exploration.");
+//    return;
+//  }
+  this.router.navigate(['/explorations/new'], { queryParams: { admissionId: this.id } });
+}
+
+loadExplorationsForAdmission(admissionId: number) {
+  this.expLoading.set(true);
+  this.expService.listByAdmission(admissionId).subscribe({
+    next: (rows) => {
+      this.explorations.set(rows || []);
+      this.expLoading.set(false);
+    },
+    error: () => {
+      this.expLoading.set(false);
+      // optionnel: ne pas bloquer la page admission
+    }
+  });
+}
+
+labelType(t: string) {
+  const map: Record<string, string> = {
+    ECG: 'ECG',
+    ETT: 'ETT (Écho)',
+    RX_TH: 'RX Thorax',
+    CORO: 'Coronarographie',
+    BIOLOGIE: 'Biologie',
+    AUTRE: 'Autre',
+  };
+  return map[t] ?? t;
+}
+
+statusLabel(s: any) {
+  const map: any = { DEMANDEE: 'Demandée', EN_COURS: 'En cours', TERMINEE: 'Terminée' };
+  return map[s] ?? s;
+}
+
 }

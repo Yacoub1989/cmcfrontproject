@@ -320,7 +320,18 @@
       {{ isEdit() ? 'Mise à jour…' : 'Enregistrement…' }}
     </span>
       </button>
+
+      <button
+        type="button"
+        class="btn btn-outline"
+        (click)="goExploration()"
+        title="Créer une demande d’exploration pour cette admission"
+      >
+        🧪 Exploration
+      </button>
+
     </div>
+
 
 
     <div class="footer-note">

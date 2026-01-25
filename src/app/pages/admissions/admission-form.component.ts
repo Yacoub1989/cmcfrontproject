@@ -192,4 +192,15 @@ constructor(
       },
     });
   }
+
+goExploration() {
+  // si on est en création, on empêche
+  if (!this.isEdit() || !this.id) {
+    this.err.set("Enregistre l'admission d'abord, puis demande une exploration.");
+    return;
+  }
+  this.router.navigate(['/explorations/new'], { queryParams: { admissionId: this.id } });
+
+}
+
 }
