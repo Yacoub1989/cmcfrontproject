@@ -24,6 +24,37 @@
         🧪 Exploration
       </button>
 
+        <button
+          type="button"
+          class="btn btn-outline"
+          (click)="goToLabo()">
+          🧪 Labo
+        </button>
+
+
+
+        <!-- Si pas demandé -->
+        <button
+                type="button"
+                class="btn btn-outline"
+                (click)="goRequestLab()">
+          🧪 Demander labo
+        </button>
+
+        <!-- Si demandé -->
+        <button *ngIf="labRequested"
+                type="button"
+                class="btn btn-outline"
+                (click)="openLab()">
+          🧪 Ouvrir labo
+        </button>
+
+        <!-- petit badge -->
+
+
+
+
+
     </div>
   </header>
 
@@ -139,6 +170,51 @@
         </div>
       </div>
     </section>
+
+
+
+
+
+    <h3 style="margin-top:18px">Demandes Labo</h3>
+
+    <!-- DEBUG: tu dois voir le JSON ici -->
+    <pre style="background:#f7f7f7; padding:10px; border-radius:8px">
+{{ labOrders | json }}
+</pre>
+
+    <div *ngIf="labLoading()">Chargement demandes labo...</div>
+
+    <div *ngIf="!labLoading && labOrders.length === 0" style="color:#666">
+      Aucune demande labo.
+    </div>
+
+    <div *ngIf="!labLoading() && labOrders().length > 0">
+      <div *ngFor="let o of labOrders()"
+           style="border:1px solid #eee; padding:10px; border-radius:10px; margin:8px 0">
+        <div>
+          <b>Demande #{{ o.id }}</b> — <b>{{ o.status }}</b> — {{ o.createdAt }}
+        </div>
+
+        <div>Paramètres: {{ (o.params || []).join(', ') }}</div>
+
+        <div>
+          Résultats:
+          <ng-container *ngIf="o.values && objectKeys(o.values).length > 0; else nores">
+        <span *ngFor="let p of (o.params || [])">
+          <span *ngIf="o.values[p] != null"> {{ p }}={{ o.values[p] }} </span>
+        </span>
+          </ng-container>
+
+          <ng-template #nores>
+            <span style="color:#666">-</span>
+          </ng-template>
+        </div>
+
+        <div style="margin-top:8px">
+        </div>
+      </div>
+    </div>
+
 
 
 

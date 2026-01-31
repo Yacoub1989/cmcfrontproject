@@ -1,33 +1,74 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { LabRequest } from '../models/lab-request.model';
+import { HttpClient } from '@angular/common/http';
+import { api } from '../core/api/http';
+
+
+
+export type LabOrder = {
+  id: number;
+  admissionId: number;
+  status: 'PENDING' | 'DONE';
+  createdAt?: string;
+};
+
+export type LabOrderDetails = {
+  id: number;
+  admissionId: number;
+  status: 'PENDING' | 'DONE';
+  createdAt?: string;
+  params: string[];
+  values: Record<string, number | null>;
+};
+
+
+
 
 @Injectable({ providedIn: 'root' })
 export class LabService {
-  private API = 'http://localhost:7777/api/lab';
+  //private api = 'http://localhost:7777/api/lab';
+
+  private a = api();
 
   constructor(private http: HttpClient) {}
 
-  create(req: { patientId: number; admissionId?: number | null; tests: string }) {
-    return this.http.post<LabRequest>(`${this.API}/requests`, req);
+  get(admissionId: number) {
+    return this.http.get<any>(`${this.a.base}/lab/results/${admissionId}`);
   }
 
-  list(status?: string, mine?: boolean) {
-    let params = new HttpParams();
-    if (status) params = params.set('status', status);
-    if (mine) params = params.set('mine', 'true');
-    return this.http.get<LabRequest[]>(`${this.API}/requests`, { params });
+  save(dto: any) {
+    return this.http.post<any>(`${this.a.base}/lab/results`, dto);
   }
 
-  get(id: number) {
-    return this.http.get<LabRequest>(`${this.API}/requests/${id}`);
+queue(status: 'PENDING' | 'DONE' = 'PENDING') {
+  return this.http.get<any[]>(`${this.a.base}/lab/queue`, { params: { status } });
+}
+
+labState(admissionId: number) {
+  return this.http.get<any>(`${this.a.base}/admissions/${admissionId}/lab-state`);
+}
+
+requestLab(admissionId: number) {
+  return this.http.post(`${this.a.base}/admissions/${admissionId}/request-lab`, {});
+}
+
+
+
+  listOrders(status: 'PENDING' | 'DONE' = 'PENDING') {
+    return this.http.get<LabOrder[]>(`${this.a.base}/lab/orders`, { params: { status } });
   }
 
-  start(id: number) {
-    return this.http.put<LabRequest>(`${this.API}/requests/${id}/start`, {});
+  getOrder(orderId: number) {
+    return this.http.get<LabOrderDetails>(`${this.a.base}/lab/orders/${orderId}`);
   }
 
-  done(id: number, body: { resultText?: string; resultValuesJson?: string }) {
-    return this.http.put<LabRequest>(`${this.API}/requests/${id}/done`, body);
+  saveResults(orderId: number, values: Record<string, number | null>) {
+    return this.http.post(`${this.a.base}/lab/results`, { orderId, values });
   }
+
+
+ordersSummary(admissionId: number) {
+  return this.http.get<any[]>(`${this.a.base}/lab/admissions/${admissionId}/orders-summary`);
+}
+
+
 }

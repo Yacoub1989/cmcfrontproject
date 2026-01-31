@@ -15,6 +15,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
       <a routerLink="/beds" routerLinkActive="active" class="nav">Beds dashboard</a>
       <a routerLink="/doctor" routerLinkActive="active" class="nav">Dashboard docteur</a>
       <a routerLink="/explorations/agent" routerLinkActive="active" class="nav">Dashboard explorations</a>
+      <a routerLink="/lab" routerLinkActive="active" class="nav">Dashboard laboratoire</a>
 
       <style>
         .nav{display:block; padding:10px 12px; border-radius:10px; text-decoration:none; color:#111827; margin-bottom:6px;}

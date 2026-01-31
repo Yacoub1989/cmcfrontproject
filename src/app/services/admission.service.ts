@@ -22,4 +22,12 @@ export class AdmissionService {
   update(id: number, adm: Admission): Observable<Admission> {
     return this.a.http.put<Admission>(`${this.a.base}/admissions/${id}`, adm);
   }
+
+labState(admissionId: number) {
+  return this.a.http.get<any>(`${this.a.base}/admissions/${admissionId}/lab-state`);
+}
+
+requestLab(admissionId: number) {
+  return this.a.http.post(`${this.a.base}/admissions/${admissionId}/request-lab`, {});
+}
 }

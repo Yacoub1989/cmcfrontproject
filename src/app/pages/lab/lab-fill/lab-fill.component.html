@@ -1,0 +1,52 @@
+<div style="padding:16px; max-width:920px; margin:0 auto">
+
+  <h2 style="margin:0 0 10px">Saisie Labo — Demande #{{ orderId }}</h2>
+
+
+  <div *ngIf="loading" style="margin-top:10px">
+    Chargement...
+  </div>
+
+  <div *ngIf="!loading && msg" style="color:#b91c1c; margin:10px 0">
+    {{ msg }}
+  </div>
+
+  <div *ngIf="!loading && details">
+    <div style="color:#666; margin:6px 0 14px">
+      Admission: <b>{{ details.admissionId }}</b> • Statut: <b>{{ details.status }}</b>
+    </div>
+
+    <div *ngIf="!details.params?.length" style="color:#666; padding:10px 0">
+      Aucun paramètre à saisir.
+    </div>
+
+    <form *ngIf="formReady" [formGroup]="form" (ngSubmit)="save()">
+
+      <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px" *ngIf="details.params?.length">
+        <div *ngFor="let code of details.params" style="border:1px solid #e5e7eb; border-radius:12px; padding:10px; background:#fafafa">
+          <div style="font-size:12px; color:#9ca3af; margin-bottom:6px">
+            code="{{ code }}" • hasCtrl={{ !!form.get(code) }}
+          </div>
+
+          <label style="display:block; font-weight:700; margin-bottom:6px">{{ label(code) }}</label>
+
+          <input
+            *ngIf="form.get(code)"
+            type="number"
+            step="any"
+            inputmode="decimal"
+            [formControlName]="code"
+            style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:10px"
+          />
+        </div>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:10px">
+        <button type="submit" [disabled]="form.invalid">Enregistrer</button>
+        <button type="button" (click)="back()">Retour</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>

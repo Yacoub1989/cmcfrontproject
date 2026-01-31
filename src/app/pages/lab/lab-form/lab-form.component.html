@@ -1,0 +1,33 @@
+<div style="padding:16px; max-width:980px">
+  <h2>Résultats Labo — Admission {{admissionId}}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="grid">
+      <label>Glycémie <input type="number" step="any" formControlName="glycemie"></label>
+      <label>Urée <input type="number" step="any" formControlName="uree"></label>
+      <label>Créatinine <input type="number" step="any" formControlName="creatinine"></label>
+
+      <label>Sodium <input type="number" step="any" formControlName="sodium"></label>
+      <label>Potassium <input type="number" step="any" formControlName="potassium"></label>
+      <label>Chlore <input type="number" step="any" formControlName="chlore"></label>
+
+      <label>CRP <input type="number" step="any" formControlName="crp"></label>
+      <label>Troponine <input type="number" step="any" formControlName="troponine"></label>
+
+      <label>Hémoglobine <input type="number" step="any" formControlName="hemoglobine"></label>
+      <label>Leucocytes <input type="number" step="any" formControlName="leucocytes"></label>
+      <label>Plaquettes <input type="number" step="any" formControlName="plaquettes"></label>
+
+      <label>INR <input type="number" step="any" formControlName="inr"></label>
+      <label>TCA <input type="number" step="any" formControlName="tca"></label>
+
+      <label>ASAT <input type="number" step="any" formControlName="asat"></label>
+      <label>ALAT <input type="number" step="any" formControlName="alat"></label>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:10px; align-items:center">
+      <button type="submit">Enregistrer</button>
+      <span *ngIf="msg">{{msg}}</span>
+    </div>
+  </form>
+</div>

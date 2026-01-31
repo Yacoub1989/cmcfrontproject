@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AdmissionService } from '../../services/admission.service';
 import { Admission } from '../../models/admission.model';
 import { ExplorationDoctorService, ExplorationView } from '../../services/exploration-doctor.service';
+import { LabService, LabOrder } from '../../services/lab.service';
 
 
 @Component({
@@ -20,12 +21,19 @@ export class AdmissionViewComponent {
   explorations = signal<ExplorationView[]>([]);
   expLoading = signal(false);
 
+
+  labOrders = signal<any[]>([]);
+  labLoading = signal(false);
+
+  objectKeys = Object.keys;
+
   private id = 0;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private expService: ExplorationDoctorService,
+    private labService: LabService,
     private admissionService: AdmissionService
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -42,6 +50,8 @@ export class AdmissionViewComponent {
     if (idParam) {
         this.loadExplorationsForAdmission(Number(idParam));
       }
+
+    this.loadLabState();
   }
 
   private load(id: number) {
@@ -58,6 +68,7 @@ export class AdmissionViewComponent {
 
         this.admission.set(normalized);
         this.loading.set(false);
+        this.loadLabOrders(id);
       },
       error: () => {
         this.err.set('Impossible de charger l’admission.');
@@ -99,6 +110,10 @@ goExploration() {
   this.router.navigate(['/explorations/new'], { queryParams: { admissionId: this.id } });
 }
 
+goToLabo() {
+    this.router.navigate(['/lab', this.id]);
+  }
+
 loadExplorationsForAdmission(admissionId: number) {
   this.expLoading.set(true);
   this.expService.listByAdmission(admissionId).subscribe({
@@ -129,5 +144,57 @@ statusLabel(s: any) {
   const map: any = { DEMANDEE: 'Demandée', EN_COURS: 'En cours', TERMINEE: 'Terminée' };
   return map[s] ?? s;
 }
+
+labRequested = false;
+labStatus: 'NONE'|'PENDING'|'DONE' = 'NONE';
+loadingLab = false;
+
+loadLabState() {
+  this.loadingLab = true;
+  this.admissionService.labState(this.id).subscribe({
+    next: (s) => {
+      this.labRequested = !!s.labRequested;
+      this.labStatus = s.labStatus;
+      this.loadingLab = false;
+    },
+    error: () => { this.loadingLab = false; }
+  });
+}
+
+requestLab() {
+  this.admissionService.requestLab(this.id).subscribe({
+    next: () => this.loadLabState()
+  });
+}
+
+openLab() {
+  this.router.navigate(['/lab', this.id]);
+}
+
+goRequestLab() {
+  this.router.navigate(['/lab/request', this.id]);
+}
+
+
+
+loadLabOrders(admissionId: number) {
+  this.labLoading.set(true);
+
+  this.labService.ordersSummary(admissionId).subscribe({
+    next: (list) => {
+      console.log('LAB ORDERS RECEIVED', list);
+      this.labOrders.set(Array.isArray(list) ? list : []);
+      this.labLoading.set(false);
+    },
+    error: (err) => {
+      console.error(err);
+      this.labOrders.set([]);
+      this.labLoading.set(false);
+    }
+  });
+}
+
+
+ //objectKeys = Object.keys;
 
 }

@@ -73,17 +73,7 @@ export class DoctorDashboardComponent {
       }
     });
 
-    // mes demandes labo
-    this.lab.list(undefined, true).subscribe({
-      next: (res) => {
-        this.labMine.set(res ?? []);
-      },
-      error: (e) => {
-        console.error(e);
-        this.labMine.set([]);
-        this.err.set('Impossible de charger les demandes labo (JWT / CORS / backend).');
-      }
-    });
+
   }
 
   logout() {

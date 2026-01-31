@@ -1,0 +1,40 @@
+<div style="padding:16px">
+  <h2>Dashboard Labo</h2>
+
+  <div style="display:flex; gap:10px; margin:12px 0; align-items:center">
+    <button (click)="setStatus('PENDING')" [disabled]="status()==='PENDING'">En attente</button>
+    <button (click)="setStatus('DONE')" [disabled]="status()==='DONE'">Terminées</button>
+    <button (click)="load()">↻</button>
+    <span style="color:#666">Total: {{items().length}}</span>
+  </div>
+
+  <div *ngIf="loading()">Chargement...</div>
+
+  <table *ngIf="!loading()" style="width:100%; border-collapse:collapse">
+    <thead>
+    <tr style="text-align:left; border-bottom:1px solid #ddd">
+      <th style="padding:8px">Demande</th>
+      <th style="padding:8px">Admission</th>
+      <th style="padding:8px">Statut</th>
+      <th style="padding:8px">Action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let o of items()" style="border-bottom:1px solid #f0f0f0">
+      <td style="padding:8px">#{{ o.id }}</td>
+      <td style="padding:8px">{{ o.admissionId }}</td>
+      <td style="padding:8px"><b>{{ o.status }}</b></td>
+      <td style="padding:8px">
+        <a [routerLink]="['/lab/orders', o.id]">
+          <button >🧪 Saisir résultats</button>
+        </a>
+      </td>
+    </tr>
+
+    <tr *ngIf="items().length===0">
+      <td colspan="4" style="padding:12px; color:#666">Aucune demande.</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
