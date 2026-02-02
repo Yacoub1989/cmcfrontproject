@@ -108,3 +108,51 @@ h1{ margin:0; font-size:28px; letter-spacing:-0.02em; }
   font-weight: 500;
   color: #6b7280; /* gris lisible */
 }
+
+.section-title.v1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 10px;
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.section-title.v1 .bar {
+  width: 4px;
+  height: 20px;
+  background: #14b8a6;
+  border-radius: 4px;
+}
+
+.section-title.v1 .icon {
+  font-size: 18px;
+}
+
+.section-title.v2 {
+  margin: 30px 0 12px;
+  padding: 10px 14px;
+  background: #f0fdfa;
+  border-left: 5px solid #14b8a6;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #065f46;
+}
+
+.section-title.v3 {
+  margin: 34px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.section-title.v3 span {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #0f766e;
+  text-transform: uppercase;
+}
+
+

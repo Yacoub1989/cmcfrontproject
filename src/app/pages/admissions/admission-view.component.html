@@ -67,42 +67,59 @@
     <div class="sep"></div>
 
     <div class="block">
-      <div class="block-h">Histoire de la maladie</div>
+      <div class="section-title v2">
+        Histoire de la maladie
+      </div>
+
       <div class="block-p">
         {{ histoireMaladie }}
       </div>
     </div>
 
+
+
     <div class="block">
-      <div class="block-h">Cardio vasculaire</div>
+      <div class="section-title v2">
+        Cardio vasculaire
+      </div>
+
       <div class="block-p">
         {{ a.cardiovasculaire }}
       </div>
     </div>
 
     <div class="block">
-      <div class="block-h">Examen general</div>
+      <div class="section-title v2">
+        Examen general
+      </div>
+
       <div class="block-p">
         {{ a.examengeneral }}
       </div>
     </div>
 
     <div class="block">
-      <div class="block-h">Electro cardiogramme</div>
+      <div class="section-title v2">
+        Electro cardiogramme
+      </div>
       <div class="block-p">
         {{ a.cardiogramme }}
       </div>
     </div>
 
     <div class="block">
-      <div class="block-h">Conclusion clinique</div>
+      <div class="section-title v2">
+        Conclusion clinique
+      </div>
       <div class="block-p">
         {{ a.conclusion }}
       </div>
     </div>
 
     <div class="block">
-      <div class="block-h">Decision therapeutique</div>
+      <div class="section-title v2">
+        Decision therapeutique
+      </div>
       <div class="block-p">
         {{ a.decision }}
       </div>
@@ -127,10 +144,13 @@
       <div class="exp-list" *ngIf="explorations().length > 0">
         <div class="exp-card" *ngFor="let e of explorations()">
           <div class="exp-head">
-            <div class="exp-title">
+            <div class="section-title v1">
+              <span class="bar"></span>
+              <span class="icon">🧠 📈</span>
               <strong>#{{ e.id }}</strong>
               <span class="muted">• {{ statusLabel(e.status) }}</span>
             </div>
+
 
             <span class="chip urgent" *ngIf="e.urgence === 'URGENT'">⚡ Urgent</span>
             <span class="chip normal" *ngIf="e.urgence !== 'URGENT'">Normal</span>
@@ -180,7 +200,9 @@
     <div *ngIf="!labLoading() && labOrders().length > 0">
       <div *ngFor="let o of labOrders()"
            style="border:1px solid #eee; padding:10px; border-radius:10px; margin:8px 0">
-        <div>
+        <div class="section-title v1">
+          <span class="bar"></span>
+          <span class="icon">🔬</span>
           <b>Demande #{{ o.id }}</b> — <b>{{ o.status }}</b> — {{ o.createdAt }}
         </div>
 
