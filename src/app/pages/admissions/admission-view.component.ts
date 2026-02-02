@@ -54,6 +54,8 @@ export class AdmissionViewComponent {
     this.loadLabState();
   }
 
+
+
   private load(id: number) {
     this.loading.set(true);
     this.err.set('');

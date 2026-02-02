@@ -80,3 +80,31 @@ h1{ margin:0; font-size:28px; letter-spacing:-0.02em; }
 .note-body { color:#374151; font-size:14px; }
 .video { width:100%; border-radius:14px; border:1px solid #e5e7eb; background:#000; margin-top:10px; }
 .empty { padding:14px; border:1px dashed #dbe3ee; border-radius:14px; color:#6b7280; text-align:center; }
+
+.title-block {
+  margin-bottom: 14px;
+}
+
+.title-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 20px;
+  font-weight: 800;
+  color: #047857; /* vert médical foncé */
+  letter-spacing: -0.2px;
+}
+
+.title-icon {
+  font-size: 22px;
+}
+
+.title-sub {
+  margin-left: 30px; /* aligné sous le texte, pas l’icône */
+  margin-top: 2px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280; /* gris lisible */
+}

@@ -1,0 +1,57 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  font-family: system-ui;
+}
+
+/* ✅ SIDEBAR BLEUE */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background-color: #45B7A8; /* 👈 couleur demandée */
+  padding: 20px 16px;
+}
+
+
+.sidebar-title {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  padding-left: 10px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: #e0e7ff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.nav-item.active {
+  background: #ffffff;
+  color: #1e3a8a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* CONTENU */
+.content {
+  flex: 1;
+  padding: 18px;
+  background: #ffffff;
+}

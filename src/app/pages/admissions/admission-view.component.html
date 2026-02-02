@@ -24,14 +24,6 @@
         🧪 Exploration
       </button>
 
-        <button
-          type="button"
-          class="btn btn-outline"
-          (click)="goToLabo()">
-          🧪 Labo
-        </button>
-
-
 
         <!-- Si pas demandé -->
         <button
@@ -42,12 +34,6 @@
         </button>
 
         <!-- Si demandé -->
-        <button *ngIf="labRequested"
-                type="button"
-                class="btn btn-outline"
-                (click)="openLab()">
-          🧪 Ouvrir labo
-        </button>
 
         <!-- petit badge -->
 
@@ -125,10 +111,10 @@
 
     <section class="section">
       <div class="section-title">
-        <div class="icon">🧪</div>
         <div>
-          <div class="section-h">Explorations demandées</div>
-          <div class="section-p">Demandes liées à cette admission</div>
+          <div class="title-main">
+            Explorations demandées
+          </div>
         </div>
       </div>
 
@@ -163,9 +149,10 @@
             <div class="note-title">Résultat agent</div>
             <div class="note-body" *ngIf="e.resultText">{{ e.resultText }}</div>
 
-            <video *ngIf="e.videoUrl" class="video" controls>
-              <source [src]="e.videoUrl" />
+            <video *ngIf="e.videoUrl" class="video" [src]="e.videoUrl" controls preload="metadata">
+              Votre navigateur ne supporte pas la vidéo.
             </video>
+
           </div>
         </div>
       </div>
@@ -174,8 +161,6 @@
 
 
 
-
-    <h3 style="margin-top:18px">Demandes Labo</h3>
 
     <!-- DEBUG: tu dois voir le JSON ici -->
     <pre style="background:#f7f7f7; padding:10px; border-radius:8px">
@@ -186,6 +171,10 @@
 
     <div *ngIf="!labLoading && labOrders.length === 0" style="color:#666">
       Aucune demande labo.
+    </div>
+
+    <div class="title-main">
+      Demandes Labo
     </div>
 
     <div *ngIf="!labLoading() && labOrders().length > 0">
