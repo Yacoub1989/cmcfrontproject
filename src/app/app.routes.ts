@@ -50,7 +50,7 @@ export const routes: Routes = [
       { path: 'explorations/agent/:id', component: ExplorationDetailComponent },
 
       { path: 'explorations/agent', canActivate: [roleGuard(['ROLE_RADIO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/explorations/exploration-agent-dashboard/exploration-agent-dashboard.component').then(m => m.ExplorationAgentDashboardComponent) },
-      { path: 'lab/request/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
+  //    { path: 'lab/request/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
 
 
     //  { path: 'lab/:admissionId', component: LabFormComponent },
