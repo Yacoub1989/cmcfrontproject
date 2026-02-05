@@ -56,4 +56,10 @@
       </button>
     </div>
   </div>
+
+  <button *ngIf="auth.isLoggedIn()"
+          (click)="logout()"
+          class="logout-btn">
+    🔓 Déconnexion
+  </button>
 </div>

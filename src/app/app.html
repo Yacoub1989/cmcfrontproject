@@ -1,1 +1,24 @@
-<router-outlet />
+<div class="app-layout">
+  <!-- Sidebar -->
+  <!-- Main content -->
+  <main class="main">
+    <!-- 🌄 IMAGE D’ENTRÉE GLOBALE -->
+    <header class="global-header">
+      <div class="logo-container">
+        <img src="/headerReduit.jpg" alt="Logo Mauritanie" class="logo-small">
+      </div>
+
+      <div class="header-overlay">
+        <h1>CMC</h1>
+        <p>Centre Militaire de Cardiologie</p>
+      </div>
+    </header>
+
+
+    <!-- Pages -->
+    <div class="page-container">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
+

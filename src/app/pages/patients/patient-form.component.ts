@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 
 type TypeIdentite = 'CIVILE' | 'MILITAIRE';
 
@@ -191,5 +192,6 @@ async onSubmit() {
     this.loading = false;
   }
 }
+
 
 }

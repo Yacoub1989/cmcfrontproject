@@ -49,14 +49,25 @@ export const routes: Routes = [
       { path: 'explorations/agent', component: ExplorationAgentDashboardComponent },
       { path: 'explorations/agent/:id', component: ExplorationDetailComponent },
 
-      { path: 'lab/:admissionId', component: LabFormComponent },
-
-      { path: 'lab', component: LabDashboardComponent },
-      { path: 'lab/:admissionId', component: LabFormComponent },
+      { path: 'explorations/agent', canActivate: [roleGuard(['ROLE_RADIO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/explorations/exploration-agent-dashboard/exploration-agent-dashboard.component').then(m => m.ExplorationAgentDashboardComponent) },
+      { path: 'lab/request/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
 
 
-     { path: 'lab/request/:admissionId', component: LabRequestComponent },
-     { path: 'lab/orders/:orderId', component: LabFillComponent },
+    //  { path: 'lab/:admissionId', component: LabFormComponent },
+      { path: 'lab/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-form/lab-form.component').then(m => m.LabFormComponent) },
+      { path: 'lab/request/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
+
+      { path: 'lab', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-dashboard/lab-dashboard.component').then(m => m.LabDashboardComponent) },
+
+      { path: 'lab/orders/:orderId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
+
+ //  { path: 'lab/:admissionId', component: LabFormComponent },
+  //    { path: 'lab', component: LabDashboardComponent },
+  //    { path: 'lab/:admissionId', component: LabFormComponent },
+
+
+  //   { path: 'lab/request/:admissionId', component: LabRequestComponent },
+   //  { path: 'lab/orders/:orderId', component: LabFillComponent },
 
     // { path: 'lab/orders/:orderId', loadComponent: () => import('./pages/lab/lab-fill.component').then(m => m.LabFillComponent) },
 

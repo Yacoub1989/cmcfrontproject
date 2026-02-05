@@ -5,6 +5,7 @@ import { AdmissionService } from '../../services/admission.service';
 import { Admission } from '../../models/admission.model';
 import { ExplorationDoctorService, ExplorationView } from '../../services/exploration-doctor.service';
 import { LabService, LabOrder } from '../../services/lab.service';
+import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class AdmissionViewComponent {
     private router: Router,
     private expService: ExplorationDoctorService,
     private labService: LabService,
+    public auth: AuthService,
     private admissionService: AdmissionService
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -196,7 +198,10 @@ loadLabOrders(admissionId: number) {
   });
 }
 
-
+logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
  //objectKeys = Object.keys;
 
 }

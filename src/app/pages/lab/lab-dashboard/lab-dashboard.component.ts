@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { LabService, LabOrder } from '../../../services/lab.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -13,7 +14,7 @@ export class LabDashboardComponent {
   items = signal<LabOrder[]>([]);
   loading = signal(false);
 
-  constructor(private lab: LabService, private router: Router) {
+  constructor(private lab: LabService, private router: Router, public auth: AuthService) {
     this.load();
   }
 
@@ -32,5 +33,10 @@ export class LabDashboardComponent {
 
 goToLabo(id: number) {
     this.router.navigate(['/lab', id]);
+  }
+
+logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

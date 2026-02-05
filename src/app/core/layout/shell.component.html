@@ -2,11 +2,11 @@
   <aside class="sidebar">
     <div style="font-weight:700; margin-bottom:16px;">CMC</div>
 
-    <a routerLink="/patients" routerLinkActive="active" class="nav">Patients</a>
-    <a routerLink="/admissions" routerLinkActive="active" class="nav">Admissions</a>
-    <a routerLink="/beds" routerLinkActive="active" class="nav">Beds dashboard</a>
-    <a routerLink="/explorations/agent" routerLinkActive="active" class="nav">Dashboard explorations</a>
-    <a routerLink="/lab" routerLinkActive="active" class="nav">Dashboard laboratoire</a>
+    <a *ngIf="auth.hasRole('ROLE_ADMIN','ROLE_DOCTEUR')" routerLink="/patients" routerLinkActive="active" class="nav">Patients</a>
+    <a *ngIf="auth.hasRole('ROLE_ADMIN','ROLE_DOCTEUR')" routerLink="/admissions" routerLinkActive="active" class="nav">Admissions</a>
+    <a *ngIf="auth.hasRole('ROLE_ADMIN','ROLE_DOCTEUR')" routerLink="/beds" routerLinkActive="active" class="nav">Beds dashboard</a>
+    <a *ngIf="auth.hasRole('ROLE_ADMIN','ROLE_RADIO')" routerLink="/explorations/agent" routerLinkActive="active" class="nav">Dashboard explorations</a>
+    <a *ngIf="auth.hasRole('ROLE_ADMIN','ROLE_LABO')" routerLink="/lab" routerLinkActive="active" class="nav">Dashboard laboratoire</a>
 
     <style>
       .nav{display:block; padding:10px 12px; border-radius:10px; text-decoration:none; color:#111827; margin-bottom:6px;}

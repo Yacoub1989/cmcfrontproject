@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { LabService } from '../../../services/lab.service';
+import { AuthService } from '../../../services/auth.service';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
 
 @Component({
   standalone: true,
@@ -32,7 +35,7 @@ export class LabFormComponent {
     alat: new FormControl<number | null>(null),
   });
 
-  constructor(private route: ActivatedRoute, private lab: LabService) {
+  constructor(private route: ActivatedRoute, private lab: LabService, public auth: AuthService, private router: Router) {
     this.admissionId = Number(this.route.snapshot.paramMap.get('admissionId'));
 
     // charger résultat s'il existe
@@ -50,5 +53,10 @@ export class LabFormComponent {
       next: () => (this.msg = 'Enregistré ✅'),
       error: () => (this.msg = 'Erreur ❌'),
     });
+  }
+
+logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

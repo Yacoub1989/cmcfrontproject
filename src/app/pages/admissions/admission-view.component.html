@@ -45,24 +45,55 @@
   </header>
 
   <div class="card" *ngIf="!loading() && admission() as a">
-    <div class="kv">
-      <div class="k">ID</div>
-      <div class="v mono">{{ a.id ?? '-' }}</div>
+    <div class="summary">
+      <div class="summary-left">
+        <div class="summary-title">
+          <div class="avatar">🫀</div>
+          <div>
+            <div class="h">Admission #{{ a.id }}</div>
+            <div class="sub">Patient #{{ a.patientId }} • Entrée {{ a.dateEntree || '-' }}</div>
+          </div>
+        </div>
 
-      <div class="k">Patient ID</div>
-      <div class="v mono">{{ a.patientId ?? '-' }}</div>
+        <div class="chips-row">
+          <span class="chip-lite">Lit: <b>{{ lit }}</b></span>
+        </div>
+      </div>
 
-      <div class="k">Date d’entrée</div>
-      <div class="v mono">{{ a.dateEntree || '-' }}</div>
-
-      <div class="k">Lit</div>
-      <div class="v mono">{{ lit }}</div>
-
-      <div class="k">Motif</div>
-      <div class="v">
-        <span class="badge">{{ a.motif || '-' }}</span>
+      <div class="summary-right">
+        <div class="motif-card">
+          <div class="motif-label">Motif</div>
+          <div class="motif-value">{{ a.motif || '-' }}</div>
+        </div>
       </div>
     </div>
+
+    <div class="grid-info">
+      <div class="info-item">
+        <div class="k">Patient Nom</div>
+        <div class="v">{{ a.patientNom || '-' }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="k">Date d’entrée</div>
+        <div class="v mono">{{ a.dateEntree || '-' }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="k">Lit</div>
+        <div class="v mono">{{ lit }}</div>
+      </div>
+
+      <div class="info-item">
+        <div class="k">Patient ID</div>
+        <div class="v mono">{{ a.patientId ?? '-' }}</div>
+      </div>
+    </div>
+
+
+
+
+
 
     <div class="sep"></div>
 
@@ -241,4 +272,10 @@
     <span class="alert-dot"></span>
     <span>{{ err() }}</span>
   </div>
+
+  <button *ngIf="auth.isLoggedIn()"
+          (click)="logout()"
+          class="logout-btn">
+    🔓 Déconnexion
+  </button>
 </div>

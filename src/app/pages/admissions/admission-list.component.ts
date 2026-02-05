@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AdmissionService } from '../../services/admission.service';
 import { Admission } from '../../models/admission.model';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 type AgeFilter = 'ALL' | 'TODAY' | 'LE7' | 'OLD';
 
@@ -62,7 +64,7 @@ export class AdmissionListComponent {
     });
   });
 
-  constructor(private admissionService: AdmissionService) {
+  constructor(private admissionService: AdmissionService, public auth: AuthService,   private router: Router) {
     this.admissionService.list().subscribe({
       next: (res) => {
         this.admissions.set(res ?? []);
@@ -124,5 +126,10 @@ export class AdmissionListComponent {
     if (b === 'TODAY') return "Aujourd'hui";
     if (b === 'LE7') return "≤ 7 jours";
     return 'Ancien';
+  }
+
+logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

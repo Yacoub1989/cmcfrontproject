@@ -1,8 +1,11 @@
 import { Component, computed, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PatientService } from '../../services/patient.service';
 import { Patient } from '../../models/patient.model';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+
 
 type TypeFilter = 'ALL' | 'CIVILE' | 'MILITAIRE';
 
@@ -41,7 +44,7 @@ export class PatientListComponent {
     });
   });
 
-  constructor(private patientService: PatientService) {
+  constructor(private patientService: PatientService, public auth: AuthService, private router: Router) {
     this.patientService.list().subscribe({
       next: (res) => {
         this.patients.set(res ?? []);
@@ -62,5 +65,10 @@ export class PatientListComponent {
     const a = (p.nom?.trim()?.[0] ?? '').toUpperCase();
     const b = (p.prenom?.trim()?.[0] ?? '').toUpperCase();
     return (a + b) || 'P';
+  }
+
+logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

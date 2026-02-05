@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AdmissionService } from '../../services/admission.service';
 import { Admission } from '../../models/admission.model';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 type BedStatus = 'DISPONIBLE' | 'OCCUPE' | 'HORS_SERVICE';
 
@@ -73,7 +75,7 @@ export class BedDashboardComponent {
   occupesCount = computed(() => this.bedCards().filter(b => b.status === 'OCCUPE').length);
   disponiblesCount = computed(() => this.total() - this.horsServiceCount() - this.occupesCount());
 
-  constructor(private admissionService: AdmissionService) {
+  constructor(private admissionService: AdmissionService, public auth: AuthService, private router: Router) {
     this.refresh();
   }
 
@@ -118,5 +120,10 @@ export class BedDashboardComponent {
   goCreateAdmissionForBed(code: string) {
     // tu peux ajouter ?lit=A1 si tu veux préremplir dans le form
     // ex: /admissions/new?lit=A1
+  }
+
+logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

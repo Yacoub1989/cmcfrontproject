@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ExplorationAgentService, ExplorationRequestDto, Status } from '../../../services/exploration-agent.service';
+import { AuthService } from '../../../services/auth.service';
+import { HttpClient } from '@angular/common/http';
+
+
 
 @Component({
   standalone: true,
@@ -37,7 +41,9 @@ export class ExplorationAgentDashboardComponent {
     });
   });
 
-  constructor(private api: ExplorationAgentService, private router: Router) {
+  constructor(private api: ExplorationAgentService, private router: Router,
+    private http: HttpClient,
+    public auth: AuthService) {
     this.load();
   }
 
@@ -90,4 +96,9 @@ export class ExplorationAgentDashboardComponent {
   refresh() {
     this.load();
   }
+
+logout() {
+      this.auth.logout();
+      this.router.navigate(['/login']);
+    }
 }

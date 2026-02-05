@@ -39,9 +39,9 @@ export class LoginComponent {
 
         const role = session.role;
 
-        if (role === 'ROLE_DOCTEUR') this.router.navigate(['/doctor']);
-        else if (role === 'ROLE_LABO') this.router.navigate(['/labo']);
-        else if (role === 'ROLE_RADIO') this.router.navigate(['/radio']);
+        if (role === 'ROLE_DOCTEUR') this.router.navigate(['/patients']);
+        else if (role === 'ROLE_LABO') this.router.navigate(['/lab']);
+        else if (role === 'ROLE_RADIO') this.router.navigate(['/explorations/agent']);
         else if (role === 'ROLE_ADMIN') this.router.navigate(['/patients']);
         else if (role === 'ROLE_PHARMACIE') this.router.navigate(['/pharmacie']);
         else this.router.navigate(['/dashboard']);

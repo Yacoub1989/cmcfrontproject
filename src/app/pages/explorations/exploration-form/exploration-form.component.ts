@@ -4,6 +4,8 @@
   import { FormsModule } from '@angular/forms';
   import { HttpClient } from '@angular/common/http';
   import { ExplorationService, CreateExplorationRequest } from '../../../services/exploration.service';
+  import { AuthService } from '../../../services/auth.service';
+
 
   type AdmissionLite = { patientNom?: string; patientId?: number; lit?: string };
 
@@ -38,6 +40,7 @@
       private route: ActivatedRoute,
       private router: Router,
       private http: HttpClient,
+      public auth: AuthService,
       private explorationService: ExplorationService
     ) {
       const qp = this.route.snapshot.queryParamMap.get('admissionId');
@@ -121,5 +124,10 @@
           this.err.set(e?.error?.message || 'Erreur lors de la création de la demande.');
         },
       });
+    }
+
+  logout() {
+      this.auth.logout();
+      this.router.navigate(['/login']);
     }
   }

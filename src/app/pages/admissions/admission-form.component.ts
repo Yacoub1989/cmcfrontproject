@@ -1,9 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Admission } from '../../models/admission.model';
 import { AdmissionService } from '../../services/admission.service';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
 
 @Component({
   standalone: true,
@@ -62,6 +65,7 @@ facteursRisque = [
 constructor(
   private route: ActivatedRoute,
   private router: Router,
+  public auth: AuthService,
   private admissionService: AdmissionService
 ) {
   const idParam = this.route.snapshot.paramMap.get('id');
@@ -202,5 +206,10 @@ goExploration() {
   this.router.navigate(['/explorations/new'], { queryParams: { admissionId: this.id } });
 
 }
+
+logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 
 }

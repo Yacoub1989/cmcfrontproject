@@ -30,4 +30,10 @@
       <span *ngIf="msg">{{msg}}</span>
     </div>
   </form>
+
+  <button *ngIf="auth.isLoggedIn()"
+          (click)="logout()"
+          class="logout-btn">
+    🔓 Déconnexion
+  </button>
 </div>
