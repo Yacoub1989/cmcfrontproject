@@ -55,11 +55,30 @@ export const routes: Routes = [
 
     //  { path: 'lab/:admissionId', component: LabFormComponent },
       { path: 'lab/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-form/lab-form.component').then(m => m.LabFormComponent) },
-      { path: 'lab/request/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
+ //     { path: 'lab/request/:admissionId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
 
       { path: 'lab', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-dashboard/lab-dashboard.component').then(m => m.LabDashboardComponent) },
 
-      { path: 'lab/orders/:orderId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
+  //    { path: 'lab/orders/:orderId', canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN'])], loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent) },
+
+
+
+ // 1) écran demande (basé sur admissionId) -> LabRequestComponent
+ {
+   path: 'lab/request/:admissionId',
+   canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN','ROLE_DOCTEUR'])],
+   loadComponent: () => import('./pages/lab/lab-request/lab-request.component').then(m => m.LabRequestComponent)
+ },
+
+ // 2) saisie résultats (basé sur orderId) -> LabFillComponent
+ {
+   path: 'lab/orders/:orderId',
+   canActivate: [roleGuard(['ROLE_LABO','ROLE_ADMIN'])],
+   loadComponent: () => import('./pages/lab/lab-fill/lab-fill.component').then(m => m.LabFillComponent)
+ },
+
+
+
 
  //  { path: 'lab/:admissionId', component: LabFormComponent },
   //    { path: 'lab', component: LabDashboardComponent },
