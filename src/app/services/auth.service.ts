@@ -20,7 +20,10 @@ export interface Session {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // ✅ adapte ton backend
-  private API_BASE = 'http://localhost:7777/api';
+
+ // private API_BASE = 'http://localhost:7777/api';
+  private API_BASE = 'http://Cmc7.eba-phvqmhxm.eu-north-1.elasticbeanstalk.com/api';
+
 
   private LS_KEY = 'cmc_session';
 

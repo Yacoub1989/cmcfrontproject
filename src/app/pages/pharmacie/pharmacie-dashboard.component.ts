@@ -10,5 +10,5 @@ import { AuthService } from '../../services/auth.service';
 })
 export class PharmacieDashboardComponent {
   constructor(public auth: AuthService, private router: Router) {}
-  logout() { this.auth.logout(); this.router.navigate(['/login']); }
+  logout() { this.auth.logout(); this.router.navigate(['login']); }
 }

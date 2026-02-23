@@ -61,7 +61,7 @@ export class LabRequestComponent {
 
     const dto = { admissionId: this.admissionId, params: selected };
 
-    this.http.post('http://localhost:7777/api/lab/orders', dto).subscribe({
+    this.http.post('http://Cmc7.eba-phvqmhxm.eu-north-1.elasticbeanstalk.com/api/lab/orders', dto).subscribe({
       next: () => {
         this.msg = 'Demande envoyée ✅';
         setTimeout(() => this.router.navigate(['/admissions', this.admissionId]), 300);
