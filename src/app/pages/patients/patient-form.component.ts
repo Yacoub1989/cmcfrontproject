@@ -6,6 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 
 type TypeIdentite = 'CIVILE' | 'MILITAIRE';
+type TypePatient = 'INTERNE' | 'EXTERNE';
+
+
 
 @Component({
   selector: 'app-patient-form',
@@ -36,6 +39,7 @@ export class PatientFormComponent implements OnInit {
     prenom: ['', [Validators.required, Validators.minLength(2)]],
     dateNaissance: [''], // input type="date" => yyyy-MM-dd
     telephone: [''],
+    typePatient: ['INTERNE' as TypePatient, Validators.required],
   });
 
   // ✅ UI helpers
@@ -92,6 +96,7 @@ export class PatientFormComponent implements OnInit {
         prenom: p?.prenom ?? '',
         dateNaissance: dateOnly(p?.dateNaissance),
         telephone: p?.telephone ?? '',
+        typePatient: (p?.typePatient ?? 'INTERNE') as TypePatient,
       });
     } catch (e) {
       console.error('Load patient error:', e);
@@ -140,6 +145,7 @@ export class PatientFormComponent implements OnInit {
       prenom: '',
       dateNaissance: '',
       telephone: '',
+      typePatient: 'INTERNE',
     });
   }
 
@@ -175,6 +181,7 @@ async onSubmit() {
       .toPromise();
 
     const newPatientId = created?.id ?? created?.patientId ?? created?.data?.id;
+    const typePatient = (created?.typePatient ?? raw.typePatient) as TypePatient;
 
     if (!newPatientId) {
       // fallback: si backend ne renvoie pas id
@@ -184,7 +191,12 @@ async onSubmit() {
     }
 
     // ✅ Redirection immédiate vers création admission avec patientId pré-rempli
-    this.router.navigate(['/admissions/new'], { queryParams: { patientId: newPatientId } });
+    if(typePatient==='INTERNE') {
+    this.router.navigate(['/admissions/new'], { queryParams: { patientId: newPatientId, typePatient } });
+    }
+  else {
+    this.router.navigate(['/patients']);
+    }
 
   } catch (e) {
     console.error('Save patient error:', e);

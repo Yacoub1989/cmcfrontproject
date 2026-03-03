@@ -18,6 +18,7 @@ export class AdmissionFormComponent {
   isEdit = signal(false);
   loading = signal(false);
   err = signal('');
+  typePatient = 'EXTERNE';
 
   motifs = [
     'SCA (Syndrome coronarien aigu)',
@@ -75,6 +76,13 @@ constructor(
   if (qp && !idParam) {
     this.model.patientId = Number(qp);
     this.lockedPatientId = true; // 🔒 verrouille le champ
+  }
+
+ const tp = this.route.snapshot.queryParamMap.get('typePatient');
+  if (tp) {
+    this.typePatient = tp;
+    console.log('tppppp   ',this.typePatient);
+    console.log('Type patient envoyé:', this.typePatient);
   }
 
   if (idParam) {
